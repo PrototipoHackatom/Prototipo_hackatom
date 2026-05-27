@@ -88,7 +88,21 @@ def dashboard(request):
     else:
         alunos = Aluno.objects.all()
 
-    pessoas = Pessoa.objects.all()
+    pessoas = []
+
+    for pessoa in Pessoa.objects.all():
+
+        cargos = pessoa.cargo.values_list(
+            'nome',
+            flat=True
+        )
+
+        # se tiver somente Professor -> não mostra
+        if list(cargos) == ['Professor']:
+            continue
+
+        pessoas.append(pessoa)
+
     turnos_estuda = TurnoEstuda.objects.all()
     turno_vaga = TurnoVaga.objects.all()
     aprendizagem = Aprendizagem.objects.all()
