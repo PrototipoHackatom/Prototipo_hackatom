@@ -4,23 +4,6 @@
 
 {% block 'content' %}
 
-<div class="container mt-5">
-
-    <div class="text-center">
-
-        <button type="button"
-                class="btn btn-primary"
-                data-bs-toggle="modal"
-                data-bs-target="#modalAluno">
-
-            Cadastrar Aluno
-
-        </button>
-
-    </div>
-
-</div>
-
 <!-- MODAL CADASTRO -->
 <div class="modal fade"
      id="modalAluno"
@@ -373,6 +356,128 @@
         </div>
 
     </div>
+
+</div>
+<!-- FILTROS -->
+<div class="container mt-5">
+
+    <form method="GET" class="row g-3">
+
+        <!-- NOME -->
+        <div class="col-md-4">
+
+            <label class="form-label">
+                Nome do aluno
+            </label>
+
+            <input type="text"
+                   name="nome"
+                   class="form-control"
+                   value="{{ request.GET.nome }}">
+
+        </div>
+
+        <!-- PROFISSIONAL -->
+        <div class="col-md-4">
+
+            <label class="form-label">
+                Profissional responsável
+            </label>
+
+            <select name="profissional"
+                    class="form-select">
+
+                <option value="">
+                    Todos
+                </option>
+
+                {% for pessoa in pessoas %}
+
+                    <option value="{{ pessoa.id }}"
+                        {% if request.GET.profissional == pessoa.id|stringformat:"s" %}
+                            selected
+                        {% endif %}>
+
+                        {{ pessoa.nome }}
+
+                    </option>
+
+                {% endfor %}
+
+            </select>
+
+        </div>
+
+        <!-- FUNCIONÁRIO QUE CADASTROU -->
+        {% if eh_admin %}
+
+        <div class="col-md-4">
+
+            <label class="form-label">
+                Funcionário que cadastrou
+            </label>
+
+            <select name="cadastrado_por"
+                    class="form-select">
+
+                <option value="">
+                    Todos
+                </option>
+
+                {% for pessoa in todas_pessoas %}
+
+                    <option value="{{ pessoa.id }}"
+                        {% if request.GET.cadastrado_por == pessoa.id|stringformat:"s" %}
+                            selected
+                        {% endif %}>
+
+                        {{ pessoa.nome }}
+
+                    </option>
+
+                {% endfor %}
+
+            </select>
+
+        </div>
+
+        {% endif %}
+
+        <div class="col-12 d-flex justify-content-between align-items-end">
+
+            <!-- ESQUERDA -->
+            <div class="d-flex gap-2">
+
+                <button class="btn btn-primary">
+                    Filtrar
+                </button>
+
+                <a href="{% url 'dashboard' %}"
+                class="btn btn-secondary">
+
+                    Limpar
+
+                </a>
+
+            </div>
+
+            <!-- DIREITA -->
+            <div>
+
+                <button type="button"
+                        class="btn btn-success"
+                        data-bs-toggle="modal"
+                        data-bs-target="#modalAluno">
+
+                    Cadastrar Aluno
+
+                </button>
+
+            </div>
+
+        </div>
+    </form>
+    
 
 </div>
 

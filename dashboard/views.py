@@ -89,26 +89,64 @@ def dashboard(request):
 
         lista_alunos = Aluno.objects.all().order_by('-id')
 
+    nome = request.GET.get('nome')
+    profissional = request.GET.get('profissional')
+    cadastrado_por = request.GET.get('cadastrado_por')
+
+
+# filtrar por nome
+    if nome:
+
+            lista_alunos = lista_alunos.filter(
+                nome__icontains=nome
+        )
+
+
+# filtrar por profissional responsável
+    if profissional:
+
+        lista_alunos = lista_alunos.filter(
+        profissional_ref__id=profissional
+    )
+
+
+# somente admin pode filtrar por quem cadastrou
+    if eh_admin and cadastrado_por:
+
+        lista_alunos = lista_alunos.filter(
+            cadastrado_por__id=cadastrado_por
+        )
+
     # paginação
     paginator = Paginator(lista_alunos, 6)
 
     page = request.GET.get('page')
 
     alunos = paginator.get_page(page)
+
     pessoas = []
 
     for pessoa in Pessoa.objects.all():
 
-        cargos = pessoa.cargo.values_list(
-            'nome',
-            flat=True
+        cargos = list(
+            pessoa.cargo.values_list(
+                'nome',
+                flat=True
+            )
         )
 
-        # se tiver somente Professor -> não mostra
-        if list(cargos) == ['Professor']:
+        if cargos == ['Professor']:
             continue
 
         pessoas.append(pessoa)
+
+
+# =========================
+# LISTA PARA FILTRO ADMIN
+# MOSTRA TODOS
+# =========================
+
+    todas_pessoas = Pessoa.objects.all()
 
     turnos_estuda = TurnoEstuda.objects.all()
     turno_vaga = TurnoVaga.objects.all()
@@ -130,7 +168,9 @@ def dashboard(request):
             'escolaridade': escolaridade,
             'entidade': entidade,
             'curso': curso,
-            'tipo_formacao': tipo_formacao
+            'tipo_formacao': tipo_formacao,
+            'eh_admin': eh_admin,
+            'todas_pessoas': todas_pessoas
         }
     )
 
