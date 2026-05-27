@@ -1,0 +1,13 @@
+{% for pessoa in pessoas %}
+    <h1>Nome: {{pessoa.nome}}</h1>
+    <h1>Email: {{pessoa.email}}</h1>
+    <h1>Telefone: {{pessoa.telefone}}</h1>
+    <h1>Local: {{pessoa.local}}</h1>
+    <h1>Cargos:
+
+    {% for cargo in pessoa.cargo.all %}
+        {{ cargo.nome }}
+    {% endfor %}
+    </h1>
+    <hr>
+{% endfor %}
