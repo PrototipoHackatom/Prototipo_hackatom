@@ -9,6 +9,7 @@ def dashboard(request):
 
     usuario = Pessoa.objects.get(id=pessoa_id)
 
+    #Pega as informções que estão sendo inseridas no formulário de cadastro do aluno
     if request.method == 'POST':
 
         nome = request.POST.get('nome')
@@ -43,7 +44,7 @@ def dashboard(request):
         tipo_formacao = TipoFormacao.objects.get(id=tipo_formacao_id)
 
 
-
+    # Salva as informações na tabela Aluno
         aluno = Aluno(
             nome=nome,
             email=email,
@@ -66,18 +67,25 @@ def dashboard(request):
 
         return redirect('dashboard')
 
-    cargo_professor = usuario.cargo.filter(
-        nome='Professor'
-    ).exists()
-
-    if cargo_professor:
+    #Verifica se o cargo do usuário é professor
+    eh_professor = usuario.cargo.filter(
+        nome='Professor').exists()
+    
+    #Verifica se o usuário tem algum cargo de admin cadastrado
+    eh_admin = usuario.cargo.filter(
+        nome__in=[
+        'Coordenador',
+        'Diretor de centro de unidade de internação',
+        'Diretor de unidade de acolhimento']).exists()
+    
+    #Se o usuário ter apenas cargo de professor verá apenas os seu alunos cadastrados
+    if eh_professor and not eh_admin:
 
         alunos = Aluno.objects.filter(
-            cadastrado_por=usuario
-        )
+        cadastrado_por=usuario)
 
+    #Se o usuário ter caargo de admin verá todos os alunos cadastrados
     else:
-
         alunos = Aluno.objects.all()
 
     pessoas = Pessoa.objects.all()
@@ -118,10 +126,39 @@ def editar_aluno(request, id):
         aluno.data_nascimento = request.POST.get('data_nascimento')
 
         profissional_id = request.POST.get('profissional_ref')
-
         profissional = Pessoa.objects.get(id=profissional_id)
-
         aluno.profissional_ref = profissional
+
+        turno_estuda_id = request.POST.get('turno_estuda')
+        turno_estuda = TurnoEstuda.objects.get(id=turno_estuda_id)
+        aluno.turno_estuda = turno_estuda
+
+        tuno_vaga_id = request.POST.get('turno_vaga')
+        turno_vaga = TurnoVaga.objects.get(id=tuno_vaga_id)
+        aluno.turno_vaga = turno_vaga
+
+        aprendizagem_id = request.POST.get('aprendizagem')
+        aprendizagem = Aprendizagem.objects.get(id=aprendizagem_id)
+        aluno.aprendizagem = aprendizagem
+
+        escolaridade_id = request.POST.get('escolaridade')
+        escolaridade = Escolaridade.objects.get(id=escolaridade_id)
+        aluno.escolaridade = escolaridade
+
+        entidade_id = request.POST.get('entidade')
+        entidade = Entidade.objects.get(id=entidade_id)
+        aluno.entidade = entidade
+
+        curso_id = request.POST.get('curso')
+        curso = Curso.objects.get(id=curso_id)
+        aluno.curso = curso
+
+        tipo_formacao_id = request.POST.get('tipo_formacao')
+        tipo_formacao = TipoFormacao.objects.get(id=tipo_formacao_id)
+        aluno.tipo_formacao = tipo_formacao
+
+
+
 
         aluno.save()
 
