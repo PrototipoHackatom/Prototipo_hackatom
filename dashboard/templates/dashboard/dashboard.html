@@ -810,6 +810,41 @@
         {% endfor %}
 
     </div>
+    <!-- PAGINAÇÃO -->
+    <div class="d-flex justify-content-center align-items-center gap-3 mt-4 mb-5">
+
+        <!-- BOTÃO ANTERIOR -->
+        {% if alunos.has_previous %}
+
+            <a href="?page={{ alunos.previous_page_number }}"
+            class="btn btn-outline-primary rounded-circle">
+
+                ←
+
+            </a>
+
+        {% endif %}
+
+        <!-- NÚMERO DA PÁGINA -->
+        <span>
+
+            Página {{ alunos.number }} de {{ alunos.paginator.num_pages }}
+
+        </span>
+
+        <!-- BOTÃO PRÓXIMO -->
+        {% if alunos.has_next %}
+
+            <a href="?page={{ alunos.next_page_number }}"
+            class="btn btn-outline-primary rounded-circle">
+
+                →
+
+            </a>
+
+        {% endif %}
+
+    </div>
 
 </div>
 

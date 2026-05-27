@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import Aluno, TurnoEstuda, TurnoVaga,Aprendizagem, Escolaridade
 from .models import Entidade, Curso, TipoFormacao
 from autenticacao.models import Pessoa
+from django.core.paginator import Paginator
 
 def dashboard(request):
 
@@ -78,16 +79,22 @@ def dashboard(request):
         'Diretor de centro de unidade de internação',
         'Diretor de unidade de acolhimento']).exists()
     
-    #Se o usuário ter apenas cargo de professor verá apenas os seu alunos cadastrados
     if eh_professor and not eh_admin:
 
-        alunos = Aluno.objects.filter(
-        cadastrado_por=usuario)
+        lista_alunos = Aluno.objects.filter(
+            cadastrado_por=usuario
+        ).order_by('-id')
 
-    #Se o usuário ter caargo de admin verá todos os alunos cadastrados
     else:
-        alunos = Aluno.objects.all()
 
+        lista_alunos = Aluno.objects.all().order_by('-id')
+
+    # paginação
+    paginator = Paginator(lista_alunos, 6)
+
+    page = request.GET.get('page')
+
+    alunos = paginator.get_page(page)
     pessoas = []
 
     for pessoa in Pessoa.objects.all():
