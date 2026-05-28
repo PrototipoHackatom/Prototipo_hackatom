@@ -19,81 +19,54 @@ Acompanhamento
     <div class="row mb-4">
 
         <div class="col-md-3 mb-3">
-
             <div class="card shadow border-0 text-center h-100">
-
                 <div class="card-body p-3">
-
                     <h6>Total de alunos</h6>
-
                     <h4 id="totalAlunos">0</h4>
-
                 </div>
-
             </div>
-
         </div>
 
         <div class="col-md-3 mb-3">
-
             <div class="card shadow border-0 text-center h-100">
-
                 <div class="card-body p-3">
-
                     <h6>Cursos ativos</h6>
-
                     <h4 id="totalCursos">0</h4>
-
                 </div>
-
             </div>
-
         </div>
 
         <div class="col-md-3 mb-3">
-
             <div class="card shadow border-0 text-center h-100">
-
                 <div class="card-body p-3">
-
-                    <h6>Bairros/Cidades</h6>
-
-                    <h4 id="totalBairros">0</h4>
-
+                    <h6>Bairro/Cidade com mais alunos</h6>
+                    <h6 id="totalBairros">-</h6>
                 </div>
-
             </div>
-
         </div>
 
         <div class="col-md-3 mb-3">
-
             <div class="card shadow border-0 text-center h-100">
-
                 <div class="card-body p-3">
-
-                    <h6>Turno em que a maioria dos alunos estudam</h6>
-
+                    <h6>Turno mais frequente</h6>
                     <h5 id="turnoMais">-</h5>
-
                 </div>
-
             </div>
-
         </div>
 
     </div>
 
     <!-- TURNOS -->
-    <div class="row mb-4">
+    <h3>Turno em que os alunos estudam</h3>
 
-        <!-- BARRAS -->
+    <div class="row mb-3">
+
         <div class="col-md-6 mb-3">
 
             <div class="card shadow p-3 h-100">
 
-                <h5 class="mb-3 text-center">
-                    Turno dos alunos (Barras)
+                <h5 class="text-center mb-3">
+                    Turnos (Barras)
                 </h5>
 
                 <div style="height:250px;">
@@ -104,20 +77,17 @@ Acompanhamento
 
         </div>
 
-        <!-- PIZZA -->
         <div class="col-md-6 mb-3">
 
             <div class="card shadow p-3 h-100">
 
-                <h5 class="mb-3 text-center">
-                    Turno dos alunos (Pizza)
+                <h5 class="text-center mb-3">
+                    Turnos (Pizza)
                 </h5>
 
                 <div style="height:250px;">
                     <canvas id="graficoTurnoPizza"></canvas>
                 </div>
-
-                <div id="legendaTurnos" class="mt-3"></div>
 
             </div>
 
@@ -125,15 +95,67 @@ Acompanhamento
 
     </div>
 
-    <!-- CURSOS -->
-    <div class="row mb-4">
+    <div class="card shadow p-3 mb-5">
+        <h5 class="text-center mb-3">Legenda dos Turnos</h5>
+        <div id="legendaTurnos"></div>
+    </div>
 
-        <!-- BARRAS -->
+
+    <!-- BAIRROS -->
+    <h3>Alunos por Bairro</h3>
+
+    <div class="row mb-3">
+
         <div class="col-md-6 mb-3">
 
             <div class="card shadow p-3 h-100">
 
-                <h5 class="mb-3 text-center">
+                <h5 class="text-center mb-3">
+                    Bairros (Barras)
+                </h5>
+
+                <div style="height:250px;">
+                    <canvas id="graficoBairros"></canvas>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-6 mb-3">
+
+            <div class="card shadow p-3 h-100">
+
+                <h5 class="text-center mb-3">
+                    Bairros (Pizza)
+                </h5>
+
+                <div style="height:250px;">
+                    <canvas id="graficoBairrosPizza"></canvas>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="card shadow p-3 mb-5">
+        <h5 class="text-center mb-3">Legenda dos Bairros</h5>
+        <div id="legendaBairros"></div>
+    </div>
+
+
+    <!-- CURSOS -->
+    <h3>Cursos Mais Procurados</h3>
+
+    <div class="row mb-3">
+
+        <div class="col-md-6 mb-3">
+
+            <div class="card shadow p-3 h-100">
+
+                <h5 class="text-center mb-3">
                     Cursos (Barras)
                 </h5>
 
@@ -145,12 +167,11 @@ Acompanhamento
 
         </div>
 
-        <!-- PIZZA -->
         <div class="col-md-6 mb-3">
 
             <div class="card shadow p-3 h-100">
 
-                <h5 class="mb-3 text-center">
+                <h5 class="text-center mb-3">
                     Cursos (Pizza)
                 </h5>
 
@@ -158,24 +179,29 @@ Acompanhamento
                     <canvas id="graficoCursosPizza"></canvas>
                 </div>
 
-                <div id="legendaCursos" class="mt-3"></div>
-
             </div>
 
         </div>
 
     </div>
 
-    <!-- IDADES -->
-    <div class="row mb-4">
+    <div class="card shadow p-3 mb-5">
+        <h5 class="text-center mb-3">Legenda dos Cursos</h5>
+        <div id="legendaCursos"></div>
+    </div>
 
-        <!-- BARRAS -->
+
+    <!-- IDADES -->
+    <h3>Faixa Etária</h3>
+
+    <div class="row mb-3">
+
         <div class="col-md-6 mb-3">
 
             <div class="card shadow p-3 h-100">
 
-                <h5 class="mb-3 text-center">
-                    Idade dos alunos (Barras)
+                <h5 class="text-center mb-3">
+                    Idades (Barras)
                 </h5>
 
                 <div style="height:250px;">
@@ -186,25 +212,72 @@ Acompanhamento
 
         </div>
 
-        <!-- PIZZA -->
         <div class="col-md-6 mb-3">
 
             <div class="card shadow p-3 h-100">
 
-                <h5 class="mb-3 text-center">
-                    Idade dos alunos (Pizza)
+                <h5 class="text-center mb-3">
+                    Idades (Pizza)
                 </h5>
 
                 <div style="height:250px;">
                     <canvas id="graficoIdadePizza"></canvas>
                 </div>
 
-                <div id="legendaIdades" class="mt-3"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="card shadow p-3 mb-5">
+        <h5 class="text-center mb-3">Legenda das Idades</h5>
+        <div id="legendaIdades"></div>
+    </div>
+
+
+    <!-- ESCOLARIDADE -->
+    <h3>Escolaridade</h3>
+
+    <div class="row mb-3">
+
+        <div class="col-md-6 mb-3">
+
+            <div class="card shadow p-3 h-100">
+
+                <h5 class="text-center mb-3">
+                    Escolaridade (Barras)
+                </h5>
+
+                <div style="height:250px;">
+                    <canvas id="graficoEscolaridadeBarra"></canvas>
+                </div>
 
             </div>
 
         </div>
 
+        <div class="col-md-6 mb-3">
+
+            <div class="card shadow p-3 h-100">
+
+                <h5 class="text-center mb-3">
+                    Escolaridade (Pizza)
+                </h5>
+
+                <div style="height:250px;">
+                    <canvas id="graficoEscolaridadePizza"></canvas>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="card shadow p-3 mb-5">
+        <h5 class="text-center mb-3">Legenda da Escolaridade</h5>
+        <div id="legendaEscolaridade"></div>
     </div>
 
 </div>
@@ -243,9 +316,119 @@ fetch('/acompanhamento/api/grafico-turno_estuda/')
 
     document.getElementById('totalAlunos').innerHTML = total;
 
-    // BARRAS
     new Chart(
         document.getElementById('graficoTurnoBarra'),
+        {
+            type: 'bar',
+            data: {
+                labels: data.labels,
+                datasets: [{
+                    label: 'Quantidade',
+                    data: data.valores,
+                    backgroundColor: cores
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false
+            }
+        }
+    );
+
+    new Chart(
+        document.getElementById('graficoTurnoPizza'),
+        {
+            type: 'pie',
+            data: {
+                labels: data.labels,
+                datasets: [{
+                    data: data.valores,
+                    backgroundColor: cores
+                }]
+            },
+            plugins: [ChartDataLabels],
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    datalabels: {
+                        color: '#fff',
+                        formatter: (value) => {
+                            let porcentagem =
+                                ((value / total) * 100).toFixed(1);
+
+                            return porcentagem + '%';
+                        }
+                    }
+                }
+            }
+        }
+    );
+
+    let legenda = `<div class="d-flex flex-wrap gap-3">`;
+
+    data.labels.forEach((turno, index) => {
+
+        let porcentagem =
+            ((data.valores[index] / total) * 100).toFixed(1);
+
+        legenda += `
+
+            <div class="d-flex align-items-center">
+
+                <div
+                    style="
+                        width:14px;
+                        height:14px;
+                        border-radius:50%;
+                        background:${cores[index]};
+                        margin-right:8px;
+                    ">
+                </div>
+
+                <small>
+                    ${turno} - ${porcentagem}%
+                </small>
+
+            </div>
+
+        `;
+
+    });
+
+    legenda += `</div>`;
+
+    document.getElementById('legendaTurnos').innerHTML = legenda;
+
+});
+
+// =========================
+// BAIRROS
+// =========================
+
+fetch('/acompanhamento/api/grafico-bairros/')
+.then(response => response.json())
+.then(data => {
+
+    // TOTAL DE BAIRROS/CIDADES
+    document.getElementById('totalBairros').innerHTML =
+        data.labels.length;
+
+    // BAIRRO-CIDADE MAIS FREQUENTE
+    let maiorValorBairro = Math.max(...data.valores);
+
+    let indexMaiorBairro =
+        data.valores.indexOf(maiorValorBairro);
+
+    document.getElementById('totalBairros').innerHTML =
+        data.labels[indexMaiorBairro];
+
+    // GRÁFICO DE BARRAS
+    new Chart(
+        document.getElementById('graficoBairros'),
         {
             type: 'bar',
 
@@ -266,9 +449,11 @@ fetch('/acompanhamento/api/grafico-turno_estuda/')
         }
     );
 
-    // PIZZA
+    let total = data.valores.reduce((a, b) => a + b, 0);
+
+    // GRÁFICO PIZZA
     new Chart(
-        document.getElementById('graficoTurnoPizza'),
+        document.getElementById('graficoBairrosPizza'),
         {
             type: 'pie',
 
@@ -317,16 +502,20 @@ fetch('/acompanhamento/api/grafico-turno_estuda/')
     );
 
     // LEGENDA
-    let legenda = '';
+    let legenda = `
 
-    data.labels.forEach((turno, index) => {
+        <div class="d-flex flex-wrap gap-3">
+
+    `;
+
+    data.labels.forEach((bairro, index) => {
 
         let porcentagem =
             ((data.valores[index] / total) * 100).toFixed(1);
 
         legenda += `
 
-            <div class="d-flex align-items-center mb-2">
+            <div class="d-flex align-items-center">
 
                 <div
                     style="
@@ -339,7 +528,7 @@ fetch('/acompanhamento/api/grafico-turno_estuda/')
                 </div>
 
                 <small>
-                    ${turno} - ${porcentagem}%
+                    ${bairro} - ${porcentagem}%
                 </small>
 
             </div>
@@ -348,7 +537,9 @@ fetch('/acompanhamento/api/grafico-turno_estuda/')
 
     });
 
-    document.getElementById('legendaTurnos').innerHTML = legenda;
+    legenda += `</div>`;
+
+    document.getElementById('legendaBairros').innerHTML = legenda;
 
 });
 
@@ -440,7 +631,11 @@ fetch('/acompanhamento/api/grafico-cursos/')
     );
 
     // LEGENDA
-    let legenda = '';
+    let legenda = `
+
+        <div class="d-flex flex-wrap gap-3">
+
+    `;
 
     data.labels.forEach((curso, index) => {
 
@@ -449,7 +644,7 @@ fetch('/acompanhamento/api/grafico-cursos/')
 
         legenda += `
 
-            <div class="d-flex align-items-center mb-2">
+            <div class="d-flex align-items-center">
 
                 <div
                     style="
@@ -470,6 +665,8 @@ fetch('/acompanhamento/api/grafico-cursos/')
         `;
 
     });
+
+    legenda += `</div>`;
 
     document.getElementById('legendaCursos').innerHTML = legenda;
 
@@ -560,7 +757,11 @@ fetch('/acompanhamento/api/grafico-idades/')
     );
 
     // LEGENDA
-    let legenda = '';
+    let legenda = `
+
+        <div class="d-flex flex-wrap gap-3">
+
+    `;
 
     data.labels.forEach((idade, index) => {
 
@@ -569,7 +770,7 @@ fetch('/acompanhamento/api/grafico-idades/')
 
         legenda += `
 
-            <div class="d-flex align-items-center mb-2">
+            <div class="d-flex align-items-center">
 
                 <div
                     style="
@@ -591,7 +792,135 @@ fetch('/acompanhamento/api/grafico-idades/')
 
     });
 
+    legenda += `</div>`;
+
     document.getElementById('legendaIdades').innerHTML = legenda;
+
+});
+
+
+// =============================
+// ESCOLARIDADE
+// =============================
+
+fetch('/acompanhamento/api/grafico-escolaridade/')
+.then(response => response.json())
+.then(data => {
+
+    let total = data.valores.reduce((a, b) => a + b, 0);
+
+    // BARRAS
+    new Chart(
+        document.getElementById('graficoEscolaridadeBarra'),
+        {
+            type: 'bar',
+
+            data: {
+                labels: data.labels,
+
+                datasets: [{
+                    label: 'Quantidade',
+                    data: data.valores,
+                    backgroundColor: cores
+                }]
+            },
+
+            options: {
+                responsive: true,
+                maintainAspectRatio: false
+            }
+        }
+    );
+
+    // PIZZA
+    new Chart(
+        document.getElementById('graficoEscolaridadePizza'),
+        {
+            type: 'pie',
+
+            data: {
+                labels: data.labels,
+
+                datasets: [{
+                    data: data.valores,
+                    backgroundColor: cores
+                }]
+            },
+
+            plugins: [ChartDataLabels],
+
+            options: {
+
+                responsive: true,
+                maintainAspectRatio: false,
+
+                plugins: {
+
+                    legend: {
+                        display: false
+                    },
+
+                    datalabels: {
+
+                        color: '#fff',
+
+                        formatter: (value) => {
+
+                            let porcentagem =
+                                ((value / total) * 100).toFixed(1);
+
+                            return porcentagem + '%';
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+    );
+
+    // LEGENDA
+    let legenda = `
+
+        <div class="d-flex flex-wrap gap-3">
+
+    `;
+
+    data.labels.forEach((escolaridade, index) => {
+
+        let porcentagem =
+            ((data.valores[index] / total) * 100).toFixed(1);
+
+        legenda += `
+
+            <div class="d-flex align-items-center">
+
+                <div
+                    style="
+                        width:14px;
+                        height:14px;
+                        border-radius:50%;
+                        background:${cores[index]};
+                        margin-right:8px;
+                    ">
+                </div>
+
+                <small>
+                    ${escolaridade} - ${porcentagem}%
+                </small>
+
+            </div>
+
+        `;
+
+    });
+
+    legenda += `</div>`;
+
+    document.getElementById('legendaEscolaridade').innerHTML = legenda;
 
 });
 

@@ -68,6 +68,17 @@ class Aluno(models.Model):
     cidade = models.CharField(max_length=100,null=True)
     estado = models.CharField(max_length=2,null=True)
 
+    def save(self, *args, **kwargs):
+
+        # REMOVE ESPAÇOS E DEIXA MAIÚSCULO
+        if self.bairro:
+            self.bairro = self.bairro.strip().upper()
+
+        if self.cidade:
+            self.cidade = self.cidade.strip().upper()
+
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return self.nome
 

@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import JsonResponse
-from dashboard.models import Aluno, Curso
+from dashboard.models import Aluno, Curso, Escolaridade
 from datetime import date
 
 
@@ -82,4 +82,55 @@ def grafico_idade(request):
         'valores': list(idades_ordenadas.values())
     }
 
+    return JsonResponse(dados)
+
+def grafico_bairros(request):
+
+    alunos = Aluno.objects.all()
+
+    bairros = {}
+
+    for aluno in alunos:
+
+        bairro_cidade = f'{aluno.bairro} - {aluno.cidade}'
+
+        if bairro_cidade in bairros:
+
+            bairros[bairro_cidade] += 1
+
+        else:
+
+            bairros[bairro_cidade] = 1
+
+    bairros_ordenados = dict(
+        sorted(
+            bairros.items(),
+            key=lambda item: item[1],
+            reverse=True
+        )
+    )
+
+    dados = {
+        'labels': list(bairros_ordenados.keys()),
+        'valores': list(bairros_ordenados.values())
+    }
+
+    return JsonResponse(dados)
+
+def grafico_escolaridade(request):
+    escolaridades = Escolaridade.objects.all()
+
+    labels = []
+    valores = []
+
+    for escolaridade in escolaridades:
+        labels.append(escolaridade.nome)
+
+        quantidade = Aluno.objects.filter(escolaridade=escolaridade).count()
+        valores.append(quantidade)
+
+        dados = {
+            'labels': labels,
+            'valores': valores
+        }
     return JsonResponse(dados)
