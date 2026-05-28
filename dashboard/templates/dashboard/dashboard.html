@@ -33,10 +33,7 @@
 
             <div class="modal-body">
 
-                <form class="row g-3"
-                      method="POST">
-
-                    {% csrf_token %}
+                <form class="row g-3" method="POST">{% csrf_token %}
 
                     <!-- NOME -->
                     <div class="col-md-4">
@@ -120,6 +117,70 @@
                                name="tel_responsavel"
                                required>
 
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">
+                            CEP
+                        </label>
+
+                        <input type="text"
+                            class="form-control"
+                            name="cep"
+                            id="cep">
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">
+                            Rua
+                        </label>
+
+                        <input type="text"
+                            class="form-control"
+                            name="rua"
+                            id="rua">
+                    </div>
+
+                    <div class="col-md-3">
+                        <label class="form-label">
+                            Número
+                        </label>
+
+                        <input type="text"
+                            class="form-control"
+                            name="numero">
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label">
+                            Bairro
+                        </label>
+
+                        <input type="text"
+                            class="form-control"
+                            name="bairro"
+                            id="bairro">
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label">
+                            Cidade
+                        </label>
+
+                        <input type="text"
+                            class="form-control"
+                            name="cidade"
+                            id="cidade">
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label">
+                            Estado
+                        </label>
+
+                        <input type="text"
+                            class="form-control"
+                            name="estado"
+                            id="estado">
                     </div>
 
                     <!-- PROFISSIONAL -->
@@ -367,7 +428,7 @@
         <div class="col-md-4">
 
             <label class="form-label">
-                Nome do aluno
+                <strong>Nome do aluno</strong> 
             </label>
 
             <input type="text"
@@ -381,7 +442,7 @@
         <div class="col-md-4">
 
             <label class="form-label">
-                Profissional responsável
+               <strong>Profissional responsável</strong> 
             </label>
 
             <select name="profissional"
@@ -414,7 +475,7 @@
         <div class="col-md-4">
 
             <label class="form-label">
-                Funcionário que cadastrou
+              <strong>Funcionário que cadastrou</strong>  
             </label>
 
             <select name="cadastrado_por"
@@ -647,6 +708,77 @@
                                                value="{{ aluno.telefone_responsavel }}">
 
                                     </div>
+                                    <div class="col-md-3">
+                        <label class="form-label">
+                            CEP
+                        </label>
+
+                        <input type="text"
+                            class="form-control"
+                            name="cep"
+                            id="cep{{aluno.id}}"
+                            value="{{aluno.cep}}">
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">
+                            Rua
+                        </label>
+
+                        <input type="text"
+                            class="form-control"
+                            name="rua"
+                            id="rua{{aluno.id}}"
+                            value="{{aluno.rua}}">
+                    </div>
+
+                    <div class="col-md-3">
+                        <label class="form-label">
+                            Número
+                        </label>
+
+                        <input type="text"
+                            class="form-control"
+                            name="numero"
+                            id="numero{{aluno.id}}"
+                            value="{{aluno.numero}}">
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label">
+                            Bairro
+                        </label>
+
+                        <input type="text"
+                            class="form-control"
+                            name="bairro"
+                            id="bairro{{aluno.id}}"
+                            value="{{aluno.bairro}}">
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label">
+                            Cidade
+                        </label>
+
+                        <input type="text"
+                            class="form-control"
+                            name="cidade"
+                            id="cidade{{aluno.id}}"
+                            value="{{aluno.cidade}}">
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label">
+                            Estado
+                        </label>
+
+                        <input type="text"
+                            class="form-control"
+                            name="estado"
+                            id="estado{{aluno.id}}"
+                            value="{{aluno.estado}}">
+                    </div>
 
                                     <!-- PROFISSIONAL -->
                                     <div class="col-md-6 mb-3">
@@ -904,6 +1036,36 @@
 
                 </div>
 
+                <script>
+
+document.getElementById('cep{{ aluno.id }}').addEventListener('blur', function () {
+
+    let cep = this.value.replace(/\D/g, '');
+
+    if (cep.length != 8) {
+        return;
+    }
+
+    fetch(`https://viacep.com.br/ws/${cep}/json/`)
+        .then(response => response.json())
+        .then(data => {
+
+            if (data.erro) {
+                alert('CEP não encontrado');
+                return;
+            }
+
+            document.getElementById('rua{{ aluno.id }}').value = data.logradouro;
+            document.getElementById('bairro{{ aluno.id }}').value = data.bairro;
+            document.getElementById('cidade{{ aluno.id }}').value = data.localidade;
+            document.getElementById('estado{{ aluno.id }}').value = data.uf;
+
+        });
+
+});
+
+</script>
+
             </div>
 
         {% empty %}
@@ -952,5 +1114,34 @@
     </div>
 
 </div>
+<script>
+
+document.getElementById('cep').addEventListener('blur', function () {
+
+    let cep = this.value.replace(/\D/g, '');
+
+    if (cep.length != 8) {
+        return;
+    }
+
+    fetch(`https://viacep.com.br/ws/${cep}/json/`)
+        .then(response => response.json())
+        .then(data => {
+
+            if (data.erro) {
+                alert('CEP não encontrado');
+                return;
+            }
+
+            document.getElementById('rua').value = data.logradouro;
+            document.getElementById('bairro').value = data.bairro;
+            document.getElementById('cidade').value = data.localidade;
+            document.getElementById('estado').value = data.uf;
+
+        });
+
+});
+
+</script>
 
 {% endblock %}

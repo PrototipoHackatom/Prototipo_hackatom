@@ -19,6 +19,12 @@ def dashboard(request):
         data_nascimento = request.POST.get('data_nascimento')
         nome_responsavel = request.POST.get('nome_responsavel')
         tel_responsavel = request.POST.get('tel_responsavel')
+        cep = request.POST.get('cep')
+        rua = request.POST.get('rua')
+        numero= request.POST.get('numero')
+        bairro = request.POST.get('bairro')
+        cidade = request.POST.get('cidade')
+        estado = request.POST.get('estado')
         
         profissional_id = request.POST.get('profissional_ref')
         profissional = Pessoa.objects.get(id=profissional_id)
@@ -61,7 +67,14 @@ def dashboard(request):
             escolaridade = escolaridade,
             entidade = entidade,
             curso = curso,
-            tipo_formacao = tipo_formacao
+            tipo_formacao = tipo_formacao,
+            cep=cep,
+            rua=rua,
+            numero=numero,
+            bairro=bairro,
+            cidade=cidade,
+            estado=estado
+
         )
 
         aluno.save()
@@ -185,6 +198,12 @@ def editar_aluno(request, id):
         aluno.telefone_responsavel = request.POST.get('telefone_responsavel')
         aluno.nome_responsavel = request.POST.get('nome_responsavel')
         aluno.data_nascimento = request.POST.get('data_nascimento')
+        aluno.cep = request.POST.get('cep')
+        aluno.rua = request.POST.get('rua')
+        aluno.numero= request.POST.get('numero')
+        aluno.bairro = request.POST.get('bairro')
+        aluno.cidade = request.POST.get('cidade')
+        aluno.estado = request.POST.get('estado')
 
         profissional_id = request.POST.get('profissional_ref')
         profissional = Pessoa.objects.get(id=profissional_id)

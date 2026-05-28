@@ -59,6 +59,14 @@ class Aluno(models.Model):
     curso = models.ForeignKey(Curso, on_delete=models.DO_NOTHING, null=True)
     turno_vaga = models.ForeignKey(TurnoVaga, on_delete=models.DO_NOTHING, null=True)
     tipo_formacao = models.ForeignKey(TipoFormacao, on_delete=models.DO_NOTHING, null=True)
-    cadastrado_por = models.ForeignKey(Pessoa,on_delete=models.DO_NOTHING,related_name='alunos_cadastrados', null=True
-    )
+    cadastrado_por = models.ForeignKey(Pessoa,on_delete=models.DO_NOTHING,related_name='alunos_cadastrados', null=True)
+    cep = models.CharField(max_length=9,null=True)
+    rua = models.CharField(max_length=255,null=True)
+    numero = models.CharField(max_length=20,null=True)
+    bairro = models.CharField(max_length=100,null=True)
+    cidade = models.CharField(max_length=100,null=True)
+    estado = models.CharField(max_length=2,null=True)
+
+    def __str__(self):
+        return self.nome
 
