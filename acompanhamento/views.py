@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import JsonResponse
-from dashboard.models import Aluno
+from dashboard.models import Aluno, Curso
+from datetime import date
 
 
 def pagina_graficos(request):
@@ -11,7 +12,7 @@ def pagina_graficos(request):
     )
 
 
-def grafico_alunos(request):
+def grafico_Turno_estuda(request):
 
     dados = {
         'labels': ['Manhã', 'Tarde', 'Noite'],
@@ -20,6 +21,65 @@ def grafico_alunos(request):
             Aluno.objects.filter(turno_estuda__nome='Tarde').count(),
             Aluno.objects.filter(turno_estuda__nome='Noite').count(),
         ]
+    }
+
+    return JsonResponse(dados)
+
+def grafico_cursos(request):
+
+    cursos = Curso.objects.all()
+
+    labels = []
+    valores = []
+
+    for curso in cursos:
+
+        labels.append(curso.nome)
+
+        quantidade = Aluno.objects.filter(curso=curso).count()
+
+        valores.append(quantidade)
+
+    dados = {
+        'labels': labels,
+        'valores': valores
+    }
+
+    return JsonResponse(dados)
+
+def calcular_idade(data_nascimento):
+    hoje = date.today()
+
+    idade = hoje.year - data_nascimento.year
+
+    if (hoje.month, hoje.day) < (data_nascimento.month, data_nascimento.day):
+        idade -= 1
+
+    return idade
+
+
+def grafico_idade(request):
+
+    alunos = Aluno.objects.all()
+
+    idades = {}
+
+    for aluno in alunos:
+
+        idade = calcular_idade(aluno.data_nascimento)
+
+        if idade in idades:
+            idades[idade] += 1
+
+        else:
+            idades[idade] = 1
+
+    # ordenar as idades
+    idades_ordenadas = dict(sorted(idades.items()))
+
+    dados = {
+        'labels': list(idades_ordenadas.keys()),
+        'valores': list(idades_ordenadas.values())
     }
 
     return JsonResponse(dados)
