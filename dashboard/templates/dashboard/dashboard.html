@@ -39,12 +39,26 @@
                     <div class="col-md-4">
 
                         <label class="form-label">
-                            Nome Completo
+                            Nome Completo (Registro civil)
                         </label>
 
                         <input type="text"
                                class="form-control"
                                name="nome"
+                               required>
+
+                    </div>
+
+                    <!-- Nome Social -->
+                     <div class="col-md-4">
+
+                        <label class="form-label">
+                            Nome Social (Opcional)
+                        </label>
+
+                        <input type="text"
+                               class="form-control"
+                               name="nome_social"
                                required>
 
                     </div>
@@ -564,7 +578,7 @@
                     <div class="card-body">
 
                         <h5 class="card-title">
-                            {{ aluno.nome }}
+                            {{ aluno.nome_social|default:aluno.nome }}
                         </h5>
 
                         <hr>
@@ -629,13 +643,28 @@
                                     <div class="col-md-6 mb-3">
 
                                         <label class="form-label">
-                                            Nome
+                                            Nome (Registro civil)
                                         </label>
 
                                         <input type="text"
                                                class="form-control"
                                                name="nome"
                                                value="{{ aluno.nome }}">
+
+                                    </div>
+
+                                    <!-- Nome Social -->
+                                    <div class="col-md-4">
+
+                                        <label class="form-label">
+                                            Nome Social (Opcional)
+                                        </label>
+
+                                        <input type="text"
+                                            class="form-control"
+                                            name="nome_social"
+                                            value="{{aluno.nome_social}}"
+                                            required>
 
                                     </div>
 

@@ -25,6 +25,7 @@ def dashboard(request):
         bairro = request.POST.get('bairro')
         cidade = request.POST.get('cidade')
         estado = request.POST.get('estado')
+        nome_social = request.POST.get('nome_social')
         
         profissional_id = request.POST.get('profissional_ref')
         profissional = Pessoa.objects.get(id=profissional_id)
@@ -54,6 +55,7 @@ def dashboard(request):
     # Salva as informações na tabela Aluno
         aluno = Aluno(
             nome=nome,
+            nome_social=nome_social,
             email=email,
             telefone=telefone,
             data_nascimento=data_nascimento,
@@ -204,6 +206,7 @@ def editar_aluno(request, id):
         aluno.bairro = request.POST.get('bairro')
         aluno.cidade = request.POST.get('cidade')
         aluno.estado = request.POST.get('estado')
+        aluno.nome_social = request.POST.get('nome_social')
 
         profissional_id = request.POST.get('profissional_ref')
         profissional = Pessoa.objects.get(id=profissional_id)
@@ -236,9 +239,6 @@ def editar_aluno(request, id):
         tipo_formacao_id = request.POST.get('tipo_formacao')
         tipo_formacao = TipoFormacao.objects.get(id=tipo_formacao_id)
         aluno.tipo_formacao = tipo_formacao
-
-
-
 
         aluno.save()
 

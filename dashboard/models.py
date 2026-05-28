@@ -46,6 +46,7 @@ class TurnoVaga(models.Model):
 
 class Aluno(models.Model):
     nome = models.CharField(max_length=200)
+    nome_social = models.CharField(max_length=200, blank=True, null=True)
     email = models.EmailField()
     nome_responsavel = models.CharField(100)
     telefone = models.CharField(100, null=True)
