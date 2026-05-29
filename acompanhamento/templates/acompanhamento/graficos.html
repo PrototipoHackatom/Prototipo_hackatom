@@ -54,11 +54,13 @@ Acompanhamento
                 </div>
             </div>
         </div>
+        
 
     </div>
 
+
     <!-- TURNOS -->
-    <h3>Turno em que os alunos estudam</h3>
+<h3>Turno em que os alunos estudam</h3>
 
     <div class="row mb-3">
 
@@ -281,17 +283,18 @@ Acompanhamento
         <div id="legendaEscolaridade"></div>
     </div>
 
+    <h2>Outros Gráficos</h2>
+
     <div class="mt-5">
 
     <div class="d-flex flex-wrap gap-3 justify-content-start">
 
-        <button
+       <button
             class="btn text-white"
             style="background-color:#2d90bd;"
-            data-bs-toggle="modal"
-            data-bs-target="#modalCursos">
+            onclick="irPara('secaoAprendizagem')">
 
-            Ver gráficos de cursos
+            Aprendizagem
 
         </button>
 
@@ -301,7 +304,7 @@ Acompanhamento
             data-bs-toggle="modal"
             data-bs-target="#modalEmpresas">
 
-            Ver gráficos de empresas
+            Nome Social
 
         </button>
 
@@ -309,19 +312,9 @@ Acompanhamento
             class="btn text-white"
             style="background-color:#2d90bd;"
             data-bs-toggle="modal"
-            data-bs-target="#modalCursos">
+            data-bs-target="#modalNomeSocial">
 
-            Ver gráficos de cursos
-
-        </button>
-
-        <button
-            class="btn text-white"
-            style="background-color:#2d90bd;"
-            data-bs-toggle="modal"
-            data-bs-target="#modalEmpresas">
-
-            Ver gráficos de empresas
+            Turno do Profissional de Referência
 
         </button>
 
@@ -329,9 +322,10 @@ Acompanhamento
             class="btn text-white"
             style="background-color:#2d90bd;"
             data-bs-toggle="modal"
-            data-bs-target="#modalCursos">
+            data-bs-target="#modalEntidade"
+            onclick="irPara('secaoEntidade')">
 
-            Ver gráficos de cursos
+            Entidade Formadora 
 
         </button>
 
@@ -339,9 +333,19 @@ Acompanhamento
             class="btn text-white"
             style="background-color:#2d90bd;"
             data-bs-toggle="modal"
-            data-bs-target="#modalEmpresas">
+            data-bs-target="#modalTurnoVagas">
 
-            Ver gráficos de empresas
+            Turno das Vagas dos Cursos
+
+        </button>
+
+        <button
+            class="btn text-white"
+            style="background-color:#2d90bd;"
+            data-bs-toggle="modal"
+            data-bs-target="#modalUnidade">
+
+            Unidade de Atuação
 
         </button>
 
@@ -351,7 +355,8 @@ Acompanhamento
 
 </div>
 
-
+{% include 'acompanhamento/grafico_aprendizagem.html' %}
+{% include 'acompanhamento/grafico_entidade.html' %}
 
 <script src="{% static 'js/acompanhamento/graficos_principal.js' %}"></script>
 

@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import JsonResponse
-from dashboard.models import Aluno, Curso, Escolaridade
+from dashboard.models import Aluno, Curso, Escolaridade, Aprendizagem, Entidade
+from autenticacao.models import Turno
 from datetime import date
 
 
@@ -132,5 +133,41 @@ def grafico_escolaridade(request):
         dados = {
             'labels': labels,
             'valores': valores
+        }
+    return JsonResponse(dados)
+
+def grafico_aprendizagem(request):
+    aprendizagens = Aprendizagem.objects.all()
+
+    labels = []
+    valores = []
+
+    for aprendizagem in aprendizagens:
+        labels.append(aprendizagem.nome)
+
+        quantidade = Aluno.objects.filter(aprendizagem=aprendizagem).count()
+        valores.append(quantidade)
+
+    dados = {
+        'labels': labels,
+        'valores': valores
+        }
+    return JsonResponse(dados)
+
+def entidade(request):
+    entidades = Entidade.objects.all()
+
+    labels = []
+    valores = []
+
+    for entidade in entidades:
+        labels.append(entidade.nome)
+
+        quantidade = Aluno.objects.filter(entidade=entidade).count()
+        valores.append(quantidade)
+
+    dados = {
+        'labels': labels,
+        'valores': valores
         }
     return JsonResponse(dados)

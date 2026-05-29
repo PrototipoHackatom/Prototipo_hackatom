@@ -7,5 +7,7 @@ urlpatterns = [
     path('api/grafico-cursos/', views.grafico_cursos, name='grafico_cursos'),
     path('api/grafico-idades/', views.grafico_idade, name='grafico_idade'),
     path('api/grafico-bairros/', views.grafico_bairros, name='grafico_bairros'),
-    path('api/grafico-escolaridade/', views.grafico_escolaridade, name='grafico_escolaridade')
+    path('api/grafico-escolaridade/', views.grafico_escolaridade, name='grafico_escolaridade'),
+    path('api/grafico-aprendizagem/', views.grafico_aprendizagem, name='grafico_aprendizagem'),
+    path('api/grafico-entidade/', views.entidade, name='entidade')
 ]
