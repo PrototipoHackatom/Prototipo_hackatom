@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from dashboard.models import Aluno, Curso, Escolaridade, Aprendizagem, Entidade
-from autenticacao.models import Turno
+from autenticacao.models import Pessoa, Unidade
 from datetime import date
 
 
@@ -130,7 +130,7 @@ def grafico_escolaridade(request):
         quantidade = Aluno.objects.filter(escolaridade=escolaridade).count()
         valores.append(quantidade)
 
-        dados = {
+    dados = {
             'labels': labels,
             'valores': valores
         }
@@ -171,3 +171,24 @@ def entidade(request):
         'valores': valores
         }
     return JsonResponse(dados)
+
+
+def grafico_unidade(request):
+    unidades = Unidade.objects.all()
+
+    labels = []
+    valores = []
+
+    for unidade in unidades:
+        labels.append(unidade.nome)
+
+        quantidade = Pessoa.objects.filter(unidade=unidade).count()
+        valores.append(quantidade)
+
+    dados = {
+        'labels': labels,
+        'valores': valores
+        }
+    return JsonResponse(dados)
+
+

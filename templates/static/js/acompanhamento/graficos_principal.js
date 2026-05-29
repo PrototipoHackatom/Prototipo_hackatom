@@ -901,9 +901,131 @@ fetch('/acompanhamento/api/grafico-entidade/')
 });
 
 
-function irPara(id) {
-    document.getElementById(id).scrollIntoView({
-        behavior: 'smooth',
-        block: 'start'
+
+// =============================
+// Unidade
+// =============================
+
+
+fetch('/acompanhamento/api/grafico-unidade/')
+.then(response => response.json())
+.then(data => {
+
+    let total = data.valores.length
+    ? data.valores.reduce((a, b) => a + b, 0)
+    : 0;
+
+    // BARRAS
+    new Chart(
+        document.getElementById('graficoUnidadeBarra'),
+        {
+            type: 'bar',
+
+            data: {
+                labels: data.labels,
+
+                datasets: [{
+                    label: 'Quantidade',
+                    data: data.valores,
+                    backgroundColor: cores
+                }]
+            },
+
+            options: {
+                responsive: true,
+                maintainAspectRatio: false
+            }
+        }
+    );
+
+    // PIZZA
+    new Chart(
+        document.getElementById('graficoUnidadePizza'),
+        {
+            type: 'pie',
+
+            data: {
+                labels: data.labels,
+
+                datasets: [{
+                    data: data.valores,
+                    backgroundColor: cores
+                }]
+            },
+
+            plugins: [ChartDataLabels],
+
+            options: {
+
+                responsive: true,
+                maintainAspectRatio: false,
+
+                plugins: {
+
+                    legend: {
+                        display: false
+                    },
+
+                    datalabels: {
+
+                        color: '#fff',
+
+                        formatter: (value) => {
+
+                            let porcentagem =
+                                ((value / total) * 100).toFixed(1);
+
+                            return porcentagem + '%';
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+    );
+
+    // LEGENDA
+    let legenda = `
+
+        <div class="d-flex flex-wrap gap-3">
+
+    `;
+
+    data.labels.forEach((unidade, index) => {
+
+        let porcentagem =
+            ((data.valores[index] / total) * 100).toFixed(1);
+
+        legenda += `
+
+            <div class="d-flex align-items-center">
+
+                <div
+                    style="
+                        width:14px;
+                        height:14px;
+                        border-radius:50%;
+                        background:${cores[index]};
+                        margin-right:8px;
+                    ">
+                </div>
+
+                <small>
+                    ${unidade} - ${porcentagem}%
+                </small>
+
+            </div>
+
+        `;
+
     });
-}
+
+    legenda += `</div>`;
+
+    document.getElementById('legendaUnidade').innerHTML = legenda;
+
+});

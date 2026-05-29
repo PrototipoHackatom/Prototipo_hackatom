@@ -1,47 +1,52 @@
-<div class="container mt-4">
-<div id="secaoAprendizagem">
-    <!-- Aprendizagem -->
-    <h3>Aprendizagem</h3>
+<div class="modal fade" id="modalAprendizagem" tabindex="-1" aria-labelledby="modalAprendizagemLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-scrollable">
+    <div class="modal-content">
 
-    <div class="row mb-3">
+      <!-- Header -->
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalAprendizagemLabel">
+          Aprendizagem
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
 
-        <div class="col-md-6 mb-3">
+      <!-- Body -->
+      <div class="modal-body">
 
+        <div class="row mb-3">
+
+          <!-- Gráfico Barras -->
+          <div class="col-md-6 mb-3">
             <div class="card shadow p-3 h-100">
+              <h5 class="text-center mb-3">Aprendizagem (Barras)</h5>
 
-                <h5 class="text-center mb-3">
-                    Aprendizagem (Barras)
-                </h5>
-
-                <div style="height:250px;">
-                    <canvas id="graficoAprendizagemBarra"></canvas>
-                </div>
-
+              <div style="height:250px;">
+                <canvas id="graficoAprendizagemBarra"></canvas>
+              </div>
             </div>
+          </div>
+
+          <!-- Gráfico Pizza -->
+          <div class="col-md-6 mb-3">
+            <div class="card shadow p-3 h-100">
+              <h5 class="text-center mb-3">Aprendizagem (Pizza)</h5>
+
+              <div style="height:250px;">
+                <canvas id="graficoAprendizagemPizza"></canvas>
+              </div>
+            </div>
+          </div>
 
         </div>
 
-        <div class="col-md-6 mb-3">
-
-            <div class="card shadow p-3 h-100">
-
-                <h5 class="text-center mb-3">
-                    Aprendizagem (Pizza)
-                </h5>
-
-                <div style="height:250px;">
-                    <canvas id="graficoAprendizagemPizza"></canvas>
-                </div>
-
-            </div>
-
+        <!-- Legenda -->
+        <div class="card shadow p-3">
+          <h5 class="text-center mb-3">Legenda da Aprendizagem</h5>
+          <div id="legendaAprendizagem"></div>
         </div>
 
-    </div>
+      </div>
 
-    <div class="card shadow p-3 mb-5">
-        <h5 class="text-center mb-3">Legenda da Aprendizagem</h5>
-        <div id="legendaAprendizagem"></div>
     </div>
-</div>
+  </div>
 </div>

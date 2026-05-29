@@ -292,10 +292,10 @@ Acompanhamento
        <button
             class="btn text-white"
             style="background-color:#2d90bd;"
-            onclick="irPara('secaoAprendizagem')">
+            data-bs-toggle="modal"
+            data-bs-target="#modalAprendizagem">
 
             Aprendizagem
-
         </button>
 
         <button
@@ -322,8 +322,7 @@ Acompanhamento
             class="btn text-white"
             style="background-color:#2d90bd;"
             data-bs-toggle="modal"
-            data-bs-target="#modalEntidade"
-            onclick="irPara('secaoEntidade')">
+            data-bs-target="#modalEntidade">
 
             Entidade Formadora 
 
@@ -357,6 +356,7 @@ Acompanhamento
 
 {% include 'acompanhamento/grafico_aprendizagem.html' %}
 {% include 'acompanhamento/grafico_entidade.html' %}
+{% include 'acompanhamento/grafico_unidade.html' %}
 
 <script src="{% static 'js/acompanhamento/graficos_principal.js' %}"></script>
 
