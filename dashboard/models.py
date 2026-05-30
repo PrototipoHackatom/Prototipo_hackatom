@@ -42,6 +42,12 @@ class TurnoVaga(models.Model):
 
     def __str__(self):
         return self.nome
+
+class Desistencia(models.Model):
+    nome = models.CharField(max_length=200, null=True)
+
+    def __str__(self):
+        return self.nome
     
 
 class Aluno(models.Model):
