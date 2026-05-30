@@ -1,5 +1,287 @@
 {% extends 'base.html' %}
-{% block 'title' %}Acompanhamento conclusão ou desistência{% endblock %}
+{% block 'title' %}Dashboard{% endblock %}
 {% block 'content' %}
-    <h1>Dashboard Second</h1>
+
+<div class="container-fluid">
+    <div class="row">
+
+    <!-- MENU LATERAL -->
+    <aside class="col-md-2 bg-dark text-white min-vh-100 p-3">
+
+        <h4 class="text-center mb-4">
+            Dashboard
+        </h4>
+
+        <div class="d-grid gap-2">
+
+            <a href="{% url 'dashboard' %}"
+               class="btn btn-outline-light text-start">
+
+                Pré-Aprendizagem / Aprendizagem
+
+            </a>
+
+            <a href="{% url 'dashboard_second' %}"
+               class="btn btn-outline-light text-start active">
+
+                Concluídos / Desistentes
+
+            </a>
+
+            <a href="{% url 'pagina_graficos' %}"
+               class="btn btn-outline-light text-start">
+
+                Acompanhamento
+
+            </a>
+
+        </div>
+
+    </aside>
+
+    <!-- CONTEÚDO -->
+    <main class="col-md-10 p-4">
+
+        <!-- FILTROS -->
+        <div class="container-fluid">
+
+            <form method="GET" class="row g-3">
+
+                <div class="col-md-4">
+
+                    <label class="form-label">
+                        <strong>Nome do aluno</strong>
+                    </label>
+
+                    <input type="text"
+                           name="nome"
+                           class="form-control"
+                           value="{{ request.GET.nome }}">
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <label class="form-label">
+                        <strong>Profissional responsável</strong>
+                    </label>
+
+                    <select name="profissional"
+                            class="form-select">
+
+                        <option value="">
+                            Todos
+                        </option>
+
+                        {% for pessoa in pessoas %}
+                            <option value="{{ pessoa.id }}"
+                            {% if request.GET.profissional == pessoa.id|stringformat:"s" %}
+                                selected
+                            {% endif %}>
+                                {{ pessoa.nome }}
+                            </option>
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+                {% if eh_admin %}
+                <div class="col-md-4">
+
+                    <label class="form-label">
+                        <strong>Funcionário que cadastrou</strong>
+                    </label>
+
+                    <select name="cadastrado_por"
+                            class="form-select">
+
+                        <option value="">
+                            Todos
+                        </option>
+
+                        {% for pessoa in todas_pessoas %}
+                            <option value="{{ pessoa.id }}"
+                            {% if request.GET.cadastrado_por == pessoa.id|stringformat:"s" %}
+                                selected
+                            {% endif %}>
+                                {{ pessoa.nome }}
+                            </option>
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+                {% endif %}
+
+                <div class="col-12 d-flex gap-2">
+
+                    <button class="btn btn-primary">
+                        Filtrar
+                    </button>
+
+                    <a href="{% url 'dashboard_second' %}"
+                       class="btn btn-secondary">
+
+                        Limpar
+
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+
+        <!-- TÍTULO -->
+        <div class="mt-5">
+
+            <div class="d-flex justify-content-between align-items-center mb-4">
+
+                <h4 class="mb-0">
+                    Alunos Concluídos / Desistência
+                </h4>
+
+            </div>
+
+            <!-- TABELA -->
+            <div class="card shadow">
+
+                <div class="card-body">
+
+                    <div class="table-responsive">
+
+                        <table class="table table-hover align-middle">
+
+                            <thead class="table-light">
+
+                                <tr>
+                                    <th>Nome</th>
+                                    <th>Telefone</th>
+                                    <th>Email</th>
+                                    <th>Status</th>
+                                    <th>Ações</th>
+                                </tr>
+
+                            </thead>
+
+                            <tbody>
+
+                                {% for aluno in alunos %}
+
+                                <tr>
+
+                                    <td>
+                                        {{ aluno.nome_social|default:aluno.nome }}
+                                    </td>
+
+                                    <td>
+                                        {{ aluno.telefone }}
+                                    </td>
+
+                                    <td>
+                                        {{ aluno.email }}
+                                    </td>
+
+                                    <td>
+
+                                        {% if aluno.status == 'desistencia' %}
+
+                                            <span class="badge bg-danger">
+                                                Desistência
+                                            </span>
+
+                                        {% else %}
+
+                                            <span class="badge bg-success">
+                                                Concluído
+                                            </span>
+
+                                        {% endif %}
+
+                                    </td>
+
+                                    <td>
+
+                                        <button class="btn btn-primary btn-sm"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#modalAluno{{ aluno.id }}">
+
+                                            Editar
+
+                                        </button>
+
+                                    </td>
+
+                                </tr>
+
+                                <!-- MANTÉM O MODAL ORIGINAL -->
+                                <!-- COLE SEU modalAluno{{ aluno.id }} AQUI -->
+
+                                {% empty %}
+
+                                <tr>
+
+                                    <td colspan="5"
+                                        class="text-center">
+
+                                        Nenhum aluno cadastrado.
+
+                                    </td>
+
+                                </tr>
+
+                                {% endfor %}
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- PAGINAÇÃO -->
+            <div class="d-flex justify-content-center align-items-center gap-3 mt-4 mb-5">
+
+                {% if alunos.has_previous %}
+
+                <a href="?page={{ alunos.previous_page_number }}"
+                   class="btn btn-outline-primary">
+
+                    ← Anterior
+
+                </a>
+
+                {% endif %}
+
+                <span>
+                    Página {{ alunos.number }}
+                    de
+                    {{ alunos.paginator.num_pages }}
+                </span>
+
+                {% if alunos.has_next %}
+
+                <a href="?page={{ alunos.next_page_number }}"
+                   class="btn btn-outline-primary">
+
+                    Próxima →
+
+                </a>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+</div>
+
 {% endblock %}
