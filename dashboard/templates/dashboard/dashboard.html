@@ -558,19 +558,23 @@
 <!-- LISTA DE ALUNOS -->
 <div class="container mt-5">
 
-    <h4 class="mb-4">
-        Alunos Cadastrados em Pré-Aprendizagem / Aprendizagem
-        <div class="d-flex gap-2 mt-4">
+    <div class="d-flex align-items-center justify-content-between mb-4">
 
-                                    <button type="submit"
-                                            class="btn btn-info w-100">
+        <h4 class="mb-0">
+            Alunos Cadastrados em Pré-Aprendizagem / Aprendizagem
+        </h4>
 
-                                        Alunos Concluidos / Desistências
+            <a href="{% url 'dashboard_second' %}"
+                class="btn btn-info btn-lg">
 
-                                    </button>
-                                    </div>
-    </h4>
-     
+                    Alunos Concluidos ou Desistência
+
+                </a>
+
+
+    </div>
+
+
     <div class="row">
 
         {% for aluno in alunos %}
