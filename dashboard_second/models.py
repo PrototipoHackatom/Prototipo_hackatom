@@ -1,7 +1,7 @@
 from django.db import models
 from autenticacao.models import Pessoa
 from dashboard.models import TurnoEstuda, TurnoVaga, Aprendizagem,Escolaridade
-from dashboard.models import Entidade, Curso, TipoFormacao
+from dashboard.models import Entidade, Curso, TipoFormacao, Sexo
 
 
 class AlunoDesistencia(models.Model):
@@ -13,6 +13,7 @@ class AlunoDesistencia(models.Model):
     telefone_responsavel = models.CharField(max_length=100)
     data_nascimento = models.DateTimeField()
     profissional_ref = models.ForeignKey(Pessoa, on_delete=models.DO_NOTHING, null=True)
+    sexo = models.ForeignKey(Sexo, on_delete=models.DO_NOTHING, null=True)
     turno_estuda = models.ForeignKey(TurnoEstuda, on_delete=models.DO_NOTHING, null=True)
     aprendizagem = models.ForeignKey(Aprendizagem, on_delete=models.DO_NOTHING, null=True)
     escolaridade = models.ForeignKey(Escolaridade, on_delete=models.DO_NOTHING, null=True)
@@ -43,6 +44,7 @@ class AlunoConcluido(models.Model):
     telefone_responsavel = models.CharField(max_length=100)
     data_nascimento = models.DateTimeField()
     profissional_ref = models.ForeignKey(Pessoa, on_delete=models.DO_NOTHING, null=True)
+    sexo = models.ForeignKey(Sexo, on_delete=models.DO_NOTHING, null=True)
     turno_estuda = models.ForeignKey(TurnoEstuda, on_delete=models.DO_NOTHING, null=True)
     aprendizagem = models.ForeignKey(Aprendizagem, on_delete=models.DO_NOTHING, null=True)
     escolaridade = models.ForeignKey(Escolaridade, on_delete=models.DO_NOTHING, null=True)

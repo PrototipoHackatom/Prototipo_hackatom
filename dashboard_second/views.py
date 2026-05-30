@@ -1,100 +1,31 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.paginator import Paginator
 from django.db.models import Q
-from .models import TurnoEstuda, Aprendizagem, Escolaridade, Entidade, Curso, TurnoVaga, TipoFormacao
+from .models import (
+    TurnoEstuda, Aprendizagem, Escolaridade, Entidade, Curso, 
+    TurnoVaga, TipoFormacao, AlunoConcluido, AlunoDesistencia
+)
 from autenticacao.models import Pessoa
 from dashboard.models import Aluno
 
-# =========================================================================================
-# 1. VIEW: DASHBOARD PRINCIPAL (PRÉ-APRENDIZAGEM / APRENDIZAGEM)
-# =========================================================================================
-def dashboard(request):
-    # Captura os parâmetros de busca enviados pelos filtros GET
-    search_nome = request.GET.get('nome', '').strip()
-    search_profissional = request.GET.get('profissional', '')
-    search_cadastrado = request.GET.get('cadastrado_por', '')
-
-    # Filtra apenas os alunos ativos (que ainda não foram concluídos ou desistiram)
-    alunos_list = Aluno.objects.filter(Q(status__isnull=True) | Q(status='') | Q(status='ativo'))
-
-    # Aplicação dinâmica dos filtros de busca
-    if search_nome:
-        alunos_list = alunos_list.filter(nome__icontains=search_nome)
-    if search_profissional:
-        alunos_list = alunos_list.filter(profissional_ref_id=search_profissional)
-    if search_cadastrado:
-        alunos_list = alunos_list.filter(cadastrado_por_id=search_cadastrado)
-
-    # Ordenação padrão por nome
-    alunos_list = alunos_list.order_by('nome')
-
-    # Paginação: Corrigido para request.GET.get('page')
-    paginator = Paginator(alunos_list, 10)
-    page_number = request.GET.get('page')
-    alunos_paginados = paginator.get_page(page_number)
-
-    context = {
-        'alunos': alunos_paginados,
-        'pessoas': Pessoa.objects.all(),
-        'todas_pessoas': Pessoa.objects.all(),  
-        'turnos_estuda': TurnoEstuda.objects.all(),
-        'aprendizagens': Aprendizagem.objects.all(),
-        'escolaridades': Escolaridade.objects.all(),
-        'entidades': Entidade.objects.all(),
-        'cursos': Curso.objects.all(),
-        'turnos_vaga': TurnoVaga.objects.all(),
-        'tipos_formacao': TipoFormacao.objects.all(),
-        'eh_admin': True,  
-    }
-    
-    # Processa o formulário de Cadastro se receber uma requisição POST
-    if request.method == 'POST':
-        novo_aluno = Aluno(
-            nome=request.POST.get('nome'),
-            nome_social=request.POST.get('nome_social'),
-            email=request.POST.get('email'),
-            nome_responsavel=request.POST.get('nome_responsavel'),
-            telefone=request.POST.get('telefone'),
-            telefone_responsavel=request.POST.get('telefone_responsavel'),
-            data_nascimento=request.POST.get('data_nascimento') or None,
-            profissional_ref_id=request.POST.get('profissional_ref') or None,
-            turno_estuda_id=request.POST.get('turno_estuda') or None,
-            aprendizagem_id=request.POST.get('aprendizagem') or None,
-            escolaridade_id=request.POST.get('escolaridade') or None,
-            entidade_id=request.POST.get('entidade') or None,
-            curso_id=request.POST.get('curso') or None,
-            turno_vaga_id=request.POST.get('turno_vaga') or None,
-            tipo_formacao_id=request.POST.get('tipo_formacao') or None,
-            cep=request.POST.get('cep'),
-            rua=request.POST.get('rua'),
-            numero=request.POST.get('numero'),
-            bairro=request.POST.get('bairro'),
-            cidade=request.POST.get('cidade'),
-            estado=request.POST.get('estado'),
-            status='ativo'
-        )
-        novo_aluno.save()
-        return redirect('dashboard')
-
-    return render(request, 'dashboard/dashboard.html', context)
-
+# ... (Mantenha a sua view dashboard igual se ela gerencia apenas Alunos Ativos) ...
 
 # =========================================================================================
 # 2. VIEW: SEGUNDA DASHBOARD (CONCLUÍDOS / DESISTENTES) + SALVAR EDIÇÃO
 # =========================================================================================
 def dashboard_second(request):
-    # Se o formulário de edição dentro do offcanvas for submetido via POST
+    # 1. PROCESSAMENTO DE POST (EDIÇÃO)
     if request.method == 'POST':
-        # Como o seu formulário HTML não passa o ID na URL da action, podemos usar um campo oculto 
-        # ou buscar dinamicamente. Para funcionar com a estrutura atual do seu HTML, 
-        # interceptamos os dados e salvamos as alterações do Aluno correspondente:
-        aluno_id = request.POST.get('aluno_id') # Caso queira adicionar um <input type="hidden" name="aluno_id" value="{{aluno.id}}"> no HTML
+        aluno_id = request.POST.get('aluno_id')
+        tipo_aluno = request.POST.get('tipo_aluno') # 'concluido' ou 'desistente'
         
-        # Como no seu HTML o form está dentro de um '{% for aluno in alunos %}', o ideal é tratar a rota de POST separada.
-        # Porém, para fazer funcionar diretamente no mesmo arquivo que enviou:
-        # Vamos buscar o aluno correspondente de forma segura se você optar por usar o ID vindo do POST:
         if aluno_id:
-            aluno = get_object_or_404(Aluno, id=aluno_id)
+            # Identifica em qual tabela salvar baseado em um input hidden que adicionamos no HTML
+            if tipo_aluno == 'concluido':
+                aluno = get_object_or_404(AlunoConcluido, id=aluno_id)
+            else:
+                aluno = get_object_or_404(AlunoDesistencia, id=aluno_id)
+                
             aluno.nome = request.POST.get('nome')
             aluno.nome_social = request.POST.get('nome_social')
             aluno.email = request.POST.get('email')
@@ -103,7 +34,7 @@ def dashboard_second(request):
             aluno.telefone_responsavel = request.POST.get('telefone_responsavel')
             aluno.data_nascimento = request.POST.get('data_nascimento') or None
             
-            # Atualização das chaves estrangeiras (ForeignKeys)
+            # Foreign Keys
             aluno.profissional_ref_id = request.POST.get('profissional_ref') or None
             aluno.turno_estuda_id = request.POST.get('turno_estuda') or None
             aluno.aprendizagem_id = request.POST.get('aprendizagem') or None
@@ -124,32 +55,42 @@ def dashboard_second(request):
             aluno.save()
             return redirect('dashboard_second')
 
-    # Execução normal do método GET (Filtros e Renderização da página)
+    # 2. PROCESSAMENTO DE GET (FILTROS E RENDERIZAÇÃO)
     search_nome = request.GET.get('nome', '').strip()
     search_profissional = request.GET.get('profissional', '')
     search_cadastrado = request.GET.get('cadastrado_por', '')
 
-    # Captura apenas os alunos que saíram do fluxo ativo
-    alunos_historico = Aluno.objects.filter(status__in=['concluido', 'desistencia'])
+    # Busca diretamente nos models específicos solicitados
+    concluidos_list = AlunoConcluido.objects.all()
+    desistentes_list = AlunoDesistencia.objects.all()
 
+    # Aplicação dos filtros dinâmicos em ambas as listas
     if search_nome:
-        alunos_historico = alunos_historico.filter(nome__icontains=search_nome)
+        concluidos_list = concluidos_list.filter(nome__icontains=search_nome)
+        desistentes_list = desistentes_list.filter(nome__icontains=search_nome)
     if search_profissional:
-        alunos_historico = alunos_historico.filter(profissional_ref_id=search_profissional)
-    if search_cadastrado:
-        alunos_historico = alunos_historico.filter(cadastrado_por_id=search_cadastrado)
+        concluidos_list = concluidos_list.filter(profissional_ref_id=search_profissional)
+        desistentes_list = desistentes_list.filter(profissional_ref_id=search_profissional)
+    # Nota: Se o campo 'cadastrado_por' estiver comentado no model, o filtro abaixo pode quebrar. 
+    # Caso descomente no model, pode descomentar aqui:
+    # if search_cadastrado:
+    #     concluidos_list = concluidos_list.filter(cadastrado_por_id=search_cadastrado)
+    #     desistentes_list = desistentes_list.filter(cadastrado_por_id=search_cadastrado)
 
-    # Paginação para as tabelas históricas
-    paginator = Paginator(alunos_historico.order_by('nome'), 10)
-    page_number = request.GET.get('page')
-    alunos_paginados = paginator.get_page(page_number)
+    # Contadores reais baseados nos models corretos
+    concluidos_count = concluidos_list.count()
+    desistentes_count = desistentes_list.count()
 
-    # Contadores dinâmicos calculados em tempo real para alimentar as badges
-    concluidos_count = Aluno.objects.filter(status='concluido').count()
-    desistentes_count = Aluno.objects.filter(status='desistencia').count()
+    # Paginação separada para cada tabela para não bagunçar a navegação do usuário
+    page_concluidos = request.GET.get('page_concluidos')
+    page_desistentes = request.GET.get('page_desistentes')
+
+    paginator_c = Paginator(concluidos_list.order_by('nome'), 5)
+    paginator_d = Paginator(desistentes_list.order_by('nome'), 5)
 
     context = {
-        'alunos': alunos_paginados,
+        'alunos_concluidos': paginator_c.get_page(page_concluidos),
+        'alunos_desistentes': paginator_d.get_page(page_desistentes),
         'pessoas': Pessoa.objects.all(),
         'todas_pessoas': Pessoa.objects.all(),
         'turnos_estuda': TurnoEstuda.objects.all(),
@@ -167,17 +108,69 @@ def dashboard_second(request):
 
 
 # =========================================================================================
-# 3. VIEWS DE MOVIMENTAÇÃO DE STATUS (BOTÕES DE AÇÃO)
+# 3. VIEWS DE MOVIMENTAÇÃO (Migrando dados entre tabelas)
 # =========================================================================================
-def mover_para_desistencia(request, aluno_id):
-    aluno = get_object_or_404(Aluno, id=aluno_id)
-    aluno.status = 'desistencia'
-    aluno.save()
+def mover_para_conclusao(request, aluno_id):
+    aluno_ativo = get_object_or_404(Aluno, id=aluno_id)
+    
+    # Cria o registro na tabela de Concluídos copiando os dados
+    AlunoConcluido.objects.create(
+        nome=aluno_ativo.nome,
+        nome_social=aluno_ativo.nome_social,
+        email=aluno_ativo.email,
+        nome_responsavel=aluno_ativo.nome_responsavel,
+        telefone=aluno_ativo.telefone,
+        telefone_responsavel=aluno_ativo.telefone_responsavel,
+        data_nascimento=aluno_ativo.data_nascimento,
+        profissional_ref=aluno_ativo.profissional_ref,
+        turno_estuda=aluno_ativo.turno_estuda,
+        aprendizagem=aluno_ativo.aprendizagem,
+        escolaridade=aluno_ativo.escolaridade,
+        entidade=aluno_ativo.entidade,
+        curso=aluno_ativo.curso,
+        turno_vaga=aluno_ativo.turno_vaga,
+        tipo_formacao=aluno_ativo.tipo_formacao,
+        cep=aluno_ativo.cep,
+        rua=aluno_ativo.rua,
+        numero=aluno_ativo.numero,
+        bairro=aluno_ativo.bairro,
+        cidade=aluno_ativo.cidade,
+        estado=aluno_ativo.estado
+    )
+    
+    # Opcional: Deleta ou altera o status do aluno ativo para não duplicar no painel principal
+    aluno_ativo.delete() 
     return redirect('dashboard')
 
 
-def mover_para_conclusao(request, aluno_id):
-    aluno = get_object_or_404(Aluno, id=aluno_id)
-    aluno.status = 'concluido'
-    aluno.save()
+def mover_para_desistencia(request, aluno_id):
+    aluno_ativo = get_object_or_404(Aluno, id=aluno_id)
+    
+    # Cria o registro na tabela de Desistentes copiando os dados
+    AlunoDesistencia.objects.create(
+        nome=aluno_ativo.nome,
+        nome_social=aluno_ativo.nome_social,
+        email=aluno_ativo.email,
+        nome_responsavel=aluno_ativo.nome_responsavel,
+        telefone=aluno_ativo.telefone,
+        telefone_responsavel=aluno_ativo.telefone_responsavel,
+        data_nascimento=aluno_ativo.data_nascimento,
+        profissional_ref=aluno_ativo.profissional_ref,
+        turno_estuda=aluno_ativo.turno_estuda,
+        aprendizagem=aluno_ativo.aprendizagem,
+        escolaridade=aluno_ativo.escolaridade,
+        entidade=aluno_ativo.entidade,
+        curso=aluno_ativo.curso,
+        turno_vaga=aluno_ativo.turno_vaga,
+        tipo_formacao=aluno_ativo.tipo_formacao,
+        cep=aluno_ativo.cep,
+        rua=aluno_ativo.rua,
+        numero=aluno_ativo.numero,
+        bairro=aluno_ativo.bairro,
+        cidade=aluno_ativo.cidade,
+        estado=aluno_ativo.estado
+    )
+    
+    # Opcional: Deleta ou altera o status do aluno ativo
+    aluno_ativo.delete()
     return redirect('dashboard')

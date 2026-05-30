@@ -43,14 +43,20 @@ class TurnoVaga(models.Model):
     def __str__(self):
         return self.nome
     
+class Sexo(models.Model):
+    nome = models.CharField(max_length=100, null=True)
+
+    def __str__(self):
+        return self.nome
+    
 
 class Aluno(models.Model):
     nome = models.CharField(max_length=200)
     nome_social = models.CharField(max_length=200, blank=True, null=True)
     email = models.EmailField()
-    nome_responsavel = models.CharField(100)
-    telefone = models.CharField(100, null=True)
-    telefone_responsavel = models.CharField(100)
+    nome_responsavel = models.CharField(max_length=100)
+    telefone = models.CharField(max_length=100)
+    telefone_responsavel = models.CharField(max_length=100)
     data_nascimento = models.DateTimeField()
     profissional_ref = models.ForeignKey(Pessoa, on_delete=models.DO_NOTHING, null=True)
     turno_estuda = models.ForeignKey(TurnoEstuda, on_delete=models.DO_NOTHING, null=True)
@@ -80,6 +86,7 @@ class Aluno(models.Model):
     entidade = models.ForeignKey(Entidade, on_delete=models.DO_NOTHING, null=True)
     curso = models.ForeignKey(Curso, on_delete=models.DO_NOTHING, null=True)
     turno_vaga = models.ForeignKey(TurnoVaga, on_delete=models.DO_NOTHING, null=True)
+    sexo = models.ForeignKey(Sexo, on_delete=models.DO_NOTHING, null=True)
     tipo_formacao = models.ForeignKey(TipoFormacao, on_delete=models.DO_NOTHING, null=True)
     cadastrado_por = models.ForeignKey(Pessoa,on_delete=models.DO_NOTHING,related_name='alunos_cadastrados', null=True)
     cep = models.CharField(max_length=9,null=True)
