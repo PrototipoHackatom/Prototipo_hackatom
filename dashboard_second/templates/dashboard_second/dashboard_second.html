@@ -35,6 +35,19 @@
         box-shadow: 0 4px 10px rgba(0, 102, 255, 0.2);
     }
 
+    /* Estilo específico para as Sub-abas */
+    .btn-ratel-subnav {
+        color: #ced4da !important;
+        font-size: 0.9rem;
+        border: 1px dashed rgba(255, 255, 255, 0.1) !important;
+        transition: all 0.3s ease;
+    }
+    .btn-ratel-subnav:hover, .btn-ratel-subnav.active {
+        background-color: rgba(0, 102, 255, 0.2) !important;
+        color: #ffffff !important;
+        border-color: var(--ratel-blue) !important;
+    }
+
     /* Botões do Sistema */
     .btn-primary {
         background-color: var(--ratel-blue) !important;
@@ -94,15 +107,25 @@
             <h6 class="text-uppercase tracking-wider text-muted small fw-bold mb-3 w-100 ps-2" style="letter-spacing: 1px;">Navegação</h6>
 
             <div class="d-grid gap-2 w-100">
-                <a href="{% url 'dashboard' %}" class="btn btn-ratel-nav text-start">
+                <a href="{% url 'dashboard' %}" 
+                   class="btn btn-ratel-nav text-start collapsed d-flex justify-content-between align-items-center" 
+                >
                     Pré‑Aprendizagem / Aprendizagem
+                    <span class="small">▼</span>
                 </a>
+                
+                <div class="collapse" id="subMenuListas">
+                    <div class="d-grid gap-1 ps-3 pt-1">
+                        <a href="{% url 'pagina_graficos' %}" class="btn btn-ratel-subnav text-start py-2 rounded">
+                            ↳ Acompanhamento
+                        </a>
+                    </div>
+                </div>
+
                 <a href="{% url 'dashboard_second' %}" class="btn btn-ratel-nav text-start active">
                     Concluídos / Desistentes
                 </a>
-                <a href="{% url 'pagina_graficos' %}" class="btn btn-ratel-nav text-start">
-                    Acompanhamento
-                </a>
+                
                 <button type="button" class="btn btn-ratel-nav text-start border-0 bg-transparent" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNotificacoes" aria-controls="offcanvasNotificacoes">
                     Notificação
                 </button>
@@ -151,6 +174,7 @@
                 </form>
             </div>
 
+            <!-- Tabela Concluídos -->
             <div class="mt-4 mb-5">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h4 class="text-ratel-title">
@@ -180,7 +204,8 @@
                                         <td>{{ aluno.email }}</td>
                                         <td><span class="badge bg-success">Concluído</span></td>
                                         <td class="text-end pe-4">
-                                            <button class="btn btn-primary btn-sm px-3" data-bs-toggle="offcanvas" data-bs-target="#offcanvasConcluido{{ aluno.id }}">Editar</button>
+                                            <!-- Botão alterado para Mais informações -->
+                                            <button class="btn btn-secondary btn-sm px-3" data-bs-toggle="offcanvas" data-bs-target="#offcanvasConcluido{{ aluno.id }}">Mais informações</button>
                                         </td>
                                     </tr>
                                     {% empty %}
@@ -195,6 +220,7 @@
                 </div>
             </div>
 
+            <!-- Tabela Desistentes -->
             <div class="mt-4 mb-5">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h4 class="text-ratel-title">
@@ -224,7 +250,8 @@
                                         <td>{{ aluno.email }}</td>
                                         <td><span class="badge bg-danger">Desistência</span></td>
                                         <td class="text-end pe-4">
-                                            <button class="btn btn-primary btn-sm px-3" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDesistente{{ aluno.id }}">Editar</button>
+                                            <!-- Botão alterado para Mais informações -->
+                                            <button class="btn btn-secondary btn-sm px-3" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDesistente{{ aluno.id }}">Mais informações</button>
                                         </td>
                                     </tr>
                                     {% empty %}
@@ -239,10 +266,11 @@
                 </div>
             </div>
 
+            <!-- Modais (Offcanvas) para Edição - Concluídos -->
             {% for aluno in alunos_concluidos %}
             <div class="offcanvas offcanvas-start text-dark" tabindex="-1" id="offcanvasConcluido{{ aluno.id }}" style="width: 480px;">
                 <div class="offcanvas-header offcanvas-ratel-header">
-                    <h5 class="offcanvas-title fw-bold text-ratel-title">Editar Cadastro (Concluído)</h5>
+                    <h5 class="offcanvas-title fw-bold text-ratel-title">Mais informações (Concluído)</h5>
                     <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"></button>
                 </div>
                 <div class="offcanvas-body">
@@ -252,6 +280,7 @@
                         <input type="hidden" name="tipo_aluno" value="concluido">
 
                         <ul class="list-group list-group-flush mb-4">
+                            <!-- Seção Dados Pessoais -->
                             <li class="list-group-item px-0 py-2 list-group-ratel-section ps-2 fw-bold small text-uppercase">Dados Pessoais</li>
                             <li class="list-group-item px-0 py-2 border-0 border-bottom">
                                 <label class="form-label fw-bold text-secondary text-uppercase small mb-1">Nome Completo</label>
@@ -262,12 +291,138 @@
                                 <input type="text" name="nome_social" class="form-control" value="{{ aluno.nome_social|default:'' }}">
                             </li>
                             <li class="list-group-item px-0 py-2 border-0 border-bottom">
+                                <label class="form-label fw-bold text-secondary text-uppercase small mb-1">Data de Nascimento</label>
+                                <input type="datetime-local" name="data_nascimento" class="form-control" value="{{ aluno.data_nascimento|date:'Y-m-d\TH:i' }}" required>
+                            </li>
+                            <li class="list-group-item px-0 py-2 border-0 border-bottom">
+                                <label class="form-label fw-bold text-secondary text-uppercase small mb-1">Sexo</label>
+                                <select name="sexo" class="form-select">
+                                    <option value="">---------</option>
+                                    {% for s in sexos %}
+                                        <option value="{{ s.id }}" {% if aluno.sexo.id == s.id %}selected{% endif %}>{{ s.nome }}</option>
+                                    {% endfor %}
+                                </select>
+                            </li>
+
+                            <!-- Seção Contatos e Responsáveis -->
+                            <li class="list-group-item px-0 py-2 list-group-ratel-section ps-2 fw-bold small text-uppercase mt-3">Contatos e Responsáveis</li>
+                            <li class="list-group-item px-0 py-2 border-0 border-bottom">
                                 <label class="form-label fw-bold text-secondary text-uppercase small mb-1">Email</label>
                                 <input type="email" name="email" class="form-control" value="{{ aluno.email }}" required>
                             </li>
                             <li class="list-group-item px-0 py-2 border-0 border-bottom">
-                                <label class="form-label fw-bold text-secondary text-uppercase small mb-1">Telefone</label>
+                                <label class="form-label fw-bold text-secondary text-uppercase small mb-1">Telefone do Aluno</label>
                                 <input type="text" name="telefone" class="form-control" value="{{ aluno.telefone|default:'' }}">
+                            </li>
+                            <li class="list-group-item px-0 py-2 border-0 border-bottom">
+                                <label class="form-label fw-bold text-secondary text-uppercase small mb-1">Nome do Responsável</label>
+                                <input type="text" name="nome_responsavel" class="form-control" value="{{ aluno.nome_responsavel }}" required>
+                            </li>
+                            <li class="list-group-item px-0 py-2 border-0 border-bottom">
+                                <label class="form-label fw-bold text-secondary text-uppercase small mb-1">Telefone do Responsável</label>
+                                <input type="text" name="telefone_responsavel" class="form-control" value="{{ aluno.telefone_responsavel }}" required>
+                            </li>
+
+                            <!-- Seção Relações e Vínculos -->
+                            <li class="list-group-item px-0 py-2 list-group-ratel-section ps-2 fw-bold small text-uppercase mt-3">Relações e Vínculos</li>
+                            <li class="list-group-item px-0 py-2 border-0 border-bottom">
+                                <label class="form-label fw-bold text-secondary text-uppercase small mb-1">Profissional de Referência</label>
+                                <select name="profissional_ref" class="form-select">
+                                    <option value="">---------</option>
+                                    {% for pessoa in pessoas %}
+                                        <option value="{{ pessoa.id }}" {% if aluno.profissional_ref.id == pessoa.id %}selected{% endif %}>{{ pessoa.nome }}</option>
+                                    {% endfor %}
+                                </select>
+                            </li>
+                            <li class="list-group-item px-0 py-2 border-0 border-bottom">
+                                <label class="form-label fw-bold text-secondary text-uppercase small mb-1">Turno que Estuda</label>
+                                <select name="turno_estuda" class="form-select">
+                                    <option value="">---------</option>
+                                    {% for turno in turnos_estuda %}
+                                        <option value="{{ turno.id }}" {% if aluno.turno_estuda.id == turno.id %}selected{% endif %}>{{ turno.nome }}</option>
+                                    {% endfor %}
+                                </select>
+                            </li>
+                            <li class="list-group-item px-0 py-2 border-0 border-bottom">
+                                <label class="form-label fw-bold text-secondary text-uppercase small mb-1">Aprendizagem</label>
+                                <select name="aprendizagem" class="form-select">
+                                    <option value="">---------</option>
+                                    {% for ap in aprendizagens %}
+                                        <option value="{{ ap.id }}" {% if aluno.aprendizagem.id == ap.id %}selected{% endif %}>{{ ap.nome }}</option>
+                                    {% endfor %}
+                                </select>
+                            </li>
+                            <li class="list-group-item px-0 py-2 border-0 border-bottom">
+                                <label class="form-label fw-bold text-secondary text-uppercase small mb-1">Escolaridade</label>
+                                <select name="escolaridade" class="form-select">
+                                    <option value="">---------</option>
+                                    {% for esc in escolaridades %}
+                                        <option value="{{ esc.id }}" {% if aluno.escolaridade.id == esc.id %}selected{% endif %}>{{ esc.nome }}</option>
+                                    {% endfor %}
+                                </select>
+                            </li>
+                            <li class="list-group-item px-0 py-2 border-0 border-bottom">
+                                <label class="form-label fw-bold text-secondary text-uppercase small mb-1">Entidade</label>
+                                <select name="entidade" class="form-select">
+                                    <option value="">---------</option>
+                                    {% for ent in entidades %}
+                                        <option value="{{ ent.id }}" {% if aluno.entidade.id == ent.id %}selected{% endif %}>{{ ent.nome }}</option>
+                                    {% endfor %}
+                                </select>
+                            </li>
+                            <li class="list-group-item px-0 py-2 border-0 border-bottom">
+                                <label class="form-label fw-bold text-secondary text-uppercase small mb-1">Curso</label>
+                                <select name="curso" class="form-select">
+                                    <option value="">---------</option>
+                                    {% for c in cursos %}
+                                        <option value="{{ c.id }}" {% if aluno.curso.id == c.id %}selected{% endif %}>{{ c.nome }}</option>
+                                    {% endfor %}
+                                </select>
+                            </li>
+                            <li class="list-group-item px-0 py-2 border-0 border-bottom">
+                                <label class="form-label fw-bold text-secondary text-uppercase small mb-1">Turno da Vaga</label>
+                                <select name="turno_vaga" class="form-select">
+                                    <option value="">---------</option>
+                                    {% for tv in turnos_vaga %}
+                                        <option value="{{ tv.id }}" {% if aluno.turno_vaga.id == tv.id %}selected{% endif %}>{{ tv.nome }}</option>
+                                    {% endfor %}
+                                </select>
+                            </li>
+                            <li class="list-group-item px-0 py-2 border-0 border-bottom">
+                                <label class="form-label fw-bold text-secondary text-uppercase small mb-1">Tipo de Formação</label>
+                                <select name="tipo_formacao" class="form-select">
+                                    <option value="">---------</option>
+                                    {% for tf in tipos_formacao %}
+                                        <option value="{{ tf.id }}" {% if aluno.tipo_formacao.id == tf.id %}selected{% endif %}>{{ tf.nome }}</option>
+                                    {% endfor %}
+                                </select>
+                            </li>
+
+                            <!-- Seção Localização / Endereço -->
+                            <li class="list-group-item px-0 py-2 list-group-ratel-section ps-2 fw-bold small text-uppercase mt-3">Localização / Endereço</li>
+                            <li class="list-group-item px-0 py-2 border-0 border-bottom">
+                                <label class="form-label fw-bold text-secondary text-uppercase small mb-1">CEP</label>
+                                <input type="text" name="cep" class="form-control" maxlength="9" value="{{ aluno.cep|default:'' }}">
+                            </li>
+                            <li class="list-group-item px-0 py-2 border-0 border-bottom">
+                                <label class="form-label fw-bold text-secondary text-uppercase small mb-1">Rua / Logradouro</label>
+                                <input type="text" name="rua" class="form-control" value="{{ aluno.rua|default:'' }}">
+                            </li>
+                            <li class="list-group-item px-0 py-2 border-0 border-bottom">
+                                <label class="form-label fw-bold text-secondary text-uppercase small mb-1">Número</label>
+                                <input type="text" name="numero" class="form-control" value="{{ aluno.numero|default:'' }}">
+                            </li>
+                            <li class="list-group-item px-0 py-2 border-0 border-bottom">
+                                <label class="form-label fw-bold text-secondary text-uppercase small mb-1">Bairro</label>
+                                <input type="text" name="bairro" class="form-control" value="{{ aluno.bairro|default:'' }}">
+                            </li>
+                            <li class="list-group-item px-0 py-2 border-0 border-bottom">
+                                <label class="form-label fw-bold text-secondary text-uppercase small mb-1">Cidade</label>
+                                <input type="text" name="cidade" class="form-control" value="{{ aluno.cidade|default:'' }}">
+                            </li>
+                            <li class="list-group-item px-0 py-2 border-0 border-bottom">
+                                <label class="form-label fw-bold text-secondary text-uppercase small mb-1">Estado (UF)</label>
+                                <input type="text" name="estado" class="form-control" maxlength="2" value="{{ aluno.estado|default:'' }}">
                             </li>
                         </ul>
                         <div class="d-grid gap-2 mt-4">
@@ -279,10 +434,11 @@
             </div>
             {% endfor %}
 
+            <!-- Modais (Offcanvas) para Edição - Desistentes -->
             {% for aluno in alunos_desistentes %}
             <div class="offcanvas offcanvas-start text-dark" tabindex="-1" id="offcanvasDesistente{{ aluno.id }}" style="width: 480px;">
                 <div class="offcanvas-header offcanvas-ratel-header">
-                    <h5 class="offcanvas-title fw-bold text-ratel-title">Editar Cadastro (Desistente)</h5>
+                    <h5 class="offcanvas-title fw-bold text-ratel-title">Mais informações (Desistente)</h5>
                     <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"></button>
                 </div>
                 <div class="offcanvas-body">
@@ -292,6 +448,7 @@
                         <input type="hidden" name="tipo_aluno" value="desistente">
 
                         <ul class="list-group list-group-flush mb-4">
+                            <!-- Seção Dados Pessoais -->
                             <li class="list-group-item px-0 py-2 list-group-ratel-section ps-2 fw-bold small text-uppercase">Dados Pessoais</li>
                             <li class="list-group-item px-0 py-2 border-0 border-bottom">
                                 <label class="form-label fw-bold text-secondary text-uppercase small mb-1">Nome Completo</label>
@@ -302,12 +459,138 @@
                                 <input type="text" name="nome_social" class="form-control" value="{{ aluno.nome_social|default:'' }}">
                             </li>
                             <li class="list-group-item px-0 py-2 border-0 border-bottom">
+                                <label class="form-label fw-bold text-secondary text-uppercase small mb-1">Data de Nascimento</label>
+                                <input type="datetime-local" name="data_nascimento" class="form-control" value="{{ aluno.data_nascimento|date:'Y-m-d\TH:i' }}" required>
+                            </li>
+                            <li class="list-group-item px-0 py-2 border-0 border-bottom">
+                                <label class="form-label fw-bold text-secondary text-uppercase small mb-1">Sexo</label>
+                                <select name="sexo" class="form-select">
+                                    <option value="">---------</option>
+                                    {% for s in sexos %}
+                                        <option value="{{ s.id }}" {% if aluno.sexo.id == s.id %}selected{% endif %}>{{ s.nome }}</option>
+                                    {% endfor %}
+                                </select>
+                            </li>
+
+                            <!-- Seção Contatos e Responsáveis -->
+                            <li class="list-group-item px-0 py-2 list-group-ratel-section ps-2 fw-bold small text-uppercase mt-3">Contatos e Responsáveis</li>
+                            <li class="list-group-item px-0 py-2 border-0 border-bottom">
                                 <label class="form-label fw-bold text-secondary text-uppercase small mb-1">Email</label>
                                 <input type="email" name="email" class="form-control" value="{{ aluno.email }}" required>
                             </li>
                             <li class="list-group-item px-0 py-2 border-0 border-bottom">
-                                <label class="form-label fw-bold text-secondary text-uppercase small mb-1">Telefone</label>
+                                <label class="form-label fw-bold text-secondary text-uppercase small mb-1">Telefone do Aluno</label>
                                 <input type="text" name="telefone" class="form-control" value="{{ aluno.telefone|default:'' }}">
+                            </li>
+                            <li class="list-group-item px-0 py-2 border-0 border-bottom">
+                                <label class="form-label fw-bold text-secondary text-uppercase small mb-1">Nome do Responsável</label>
+                                <input type="text" name="nome_responsavel" class="form-control" value="{{ aluno.nome_responsavel }}" required>
+                            </li>
+                            <li class="list-group-item px-0 py-2 border-0 border-bottom">
+                                <label class="form-label fw-bold text-secondary text-uppercase small mb-1">Telefone do Responsável</label>
+                                <input type="text" name="telefone_responsavel" class="form-control" value="{{ aluno.telefone_responsavel }}" required>
+                            </li>
+
+                            <!-- Seção Relações e Vínculos -->
+                            <li class="list-group-item px-0 py-2 list-group-ratel-section ps-2 fw-bold small text-uppercase mt-3">Relações e Vínculos</li>
+                            <li class="list-group-item px-0 py-2 border-0 border-bottom">
+                                <label class="form-label fw-bold text-secondary text-uppercase small mb-1">Profissional de Referência</label>
+                                <select name="profissional_ref" class="form-select">
+                                    <option value="">---------</option>
+                                    {% for pessoa in pessoas %}
+                                        <option value="{{ pessoa.id }}" {% if aluno.profissional_ref.id == pessoa.id %}selected{% endif %}>{{ pessoa.nome }}</option>
+                                    {% endfor %}
+                                </select>
+                            </li>
+                            <li class="list-group-item px-0 py-2 border-0 border-bottom">
+                                <label class="form-label fw-bold text-secondary text-uppercase small mb-1">Turno que Estuda</label>
+                                <select name="turno_estuda" class="form-select">
+                                    <option value="">---------</option>
+                                    {% for turno in turnos_estuda %}
+                                        <option value="{{ turno.id }}" {% if aluno.turno_estuda.id == turno.id %}selected{% endif %}>{{ turno.nome }}</option>
+                                    {% endfor %}
+                                </select>
+                            </li>
+                            <li class="list-group-item px-0 py-2 border-0 border-bottom">
+                                <label class="form-label fw-bold text-secondary text-uppercase small mb-1">Aprendizagem</label>
+                                <select name="aprendizagem" class="form-select">
+                                    <option value="">---------</option>
+                                    {% for ap in aprendizagens %}
+                                        <option value="{{ ap.id }}" {% if aluno.aprendizagem.id == ap.id %}selected{% endif %}>{{ ap.nome }}</option>
+                                    {% endfor %}
+                                </select>
+                            </li>
+                            <li class="list-group-item px-0 py-2 border-0 border-bottom">
+                                <label class="form-label fw-bold text-secondary text-uppercase small mb-1">Escolaridade</label>
+                                <select name="escolaridade" class="form-select">
+                                    <option value="">---------</option>
+                                    {% for esc in escolaridades %}
+                                        <option value="{{ esc.id }}" {% if aluno.escolaridade.id == esc.id %}selected{% endif %}>{{ esc.nome }}</option>
+                                    {% endfor %}
+                                </select>
+                            </li>
+                            <li class="list-group-item px-0 py-2 border-0 border-bottom">
+                                <label class="form-label fw-bold text-secondary text-uppercase small mb-1">Entidade</label>
+                                <select name="entidade" class="form-select">
+                                    <option value="">---------</option>
+                                    {% for ent in entidades %}
+                                        <option value="{{ ent.id }}" {% if aluno.entidade.id == ent.id %}selected{% endif %}>{{ ent.nome }}</option>
+                                    {% endfor %}
+                                </select>
+                            </li>
+                            <li class="list-group-item px-0 py-2 border-0 border-bottom">
+                                <label class="form-label fw-bold text-secondary text-uppercase small mb-1">Curso</label>
+                                <select name="curso" class="form-select">
+                                    <option value="">---------</option>
+                                    {% for c in cursos %}
+                                        <option value="{{ c.id }}" {% if aluno.curso.id == c.id %}selected{% endif %}>{{ c.nome }}</option>
+                                    {% endfor %}
+                                </select>
+                            </li>
+                            <li class="list-group-item px-0 py-2 border-0 border-bottom">
+                                <label class="form-label fw-bold text-secondary text-uppercase small mb-1">Turno da Vaga</label>
+                                <select name="turno_vaga" class="form-select">
+                                    <option value="">---------</option>
+                                    {% for tv in turnos_vaga %}
+                                        <option value="{{ tv.id }}" {% if aluno.turno_vaga.id == tv.id %}selected{% endif %}>{{ tv.nome }}</option>
+                                    {% endfor %}
+                                </select>
+                            </li>
+                            <li class="list-group-item px-0 py-2 border-0 border-bottom">
+                                <label class="form-label fw-bold text-secondary text-uppercase small mb-1">Tipo de Formação</label>
+                                <select name="tipo_formacao" class="form-select">
+                                    <option value="">---------</option>
+                                    {% for tf in tipos_formacao %}
+                                        <option value="{{ tf.id }}" {% if aluno.tipo_formacao.id == tf.id %}selected{% endif %}>{{ tf.nome }}</option>
+                                    {% endfor %}
+                                </select>
+                            </li>
+
+                            <!-- Seção Localização / Endereço -->
+                            <li class="list-group-item px-0 py-2 list-group-ratel-section ps-2 fw-bold small text-uppercase mt-3">Localização / Endereço</li>
+                            <li class="list-group-item px-0 py-2 border-0 border-bottom">
+                                <label class="form-label fw-bold text-secondary text-uppercase small mb-1">CEP</label>
+                                <input type="text" name="cep" class="form-control" maxlength="9" value="{{ aluno.cep|default:'' }}">
+                            </li>
+                            <li class="list-group-item px-0 py-2 border-0 border-bottom">
+                                <label class="form-label fw-bold text-secondary text-uppercase small mb-1">Rua / Logradouro</label>
+                                <input type="text" name="rua" class="form-control" value="{{ aluno.rua|default:'' }}">
+                            </li>
+                            <li class="list-group-item px-0 py-2 border-0 border-bottom">
+                                <label class="form-label fw-bold text-secondary text-uppercase small mb-1">Número</label>
+                                <input type="text" name="numero" class="form-control" value="{{ aluno.numero|default:'' }}">
+                            </li>
+                            <li class="list-group-item px-0 py-2 border-0 border-bottom">
+                                <label class="form-label fw-bold text-secondary text-uppercase small mb-1">Bairro</label>
+                                <input type="text" name="bairro" class="form-control" value="{{ aluno.bairro|default:'' }}">
+                            </li>
+                            <li class="list-group-item px-0 py-2 border-0 border-bottom">
+                                <label class="form-label fw-bold text-secondary text-uppercase small mb-1">Cidade</label>
+                                <input type="text" name="cidade" class="form-control" value="{{ aluno.cidade|default:'' }}">
+                            </li>
+                            <li class="list-group-item px-0 py-2 border-0 border-bottom">
+                                <label class="form-label fw-bold text-secondary text-uppercase small mb-1">Estado (UF)</label>
+                                <input type="text" name="estado" class="form-control" maxlength="2" value="{{ aluno.estado|default:'' }}">
                             </li>
                         </ul>
                         <div class="d-grid gap-2 mt-4">

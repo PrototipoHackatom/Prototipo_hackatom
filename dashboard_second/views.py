@@ -3,7 +3,7 @@ from django.core.paginator import Paginator
 from django.db.models import Q
 from .models import (
     TurnoEstuda, Aprendizagem, Escolaridade, Entidade, Curso, 
-    TurnoVaga, TipoFormacao, AlunoConcluido, AlunoDesistencia
+    TurnoVaga, TipoFormacao, AlunoConcluido, AlunoDesistencia, Sexo
 )
 from autenticacao.models import Pessoa
 from dashboard.models import Aluno
@@ -43,6 +43,7 @@ def dashboard_second(request):
             aluno.curso_id = request.POST.get('curso') or None
             aluno.turno_vaga_id = request.POST.get('turno_vaga') or None
             aluno.tipo_formacao_id = request.POST.get('tipo_formacao') or None
+            aluno.sexo_id = request.POST.get('seco') or None
             
             # Endereço
             aluno.cep = request.POST.get('cep')
@@ -92,6 +93,7 @@ def dashboard_second(request):
         'alunos_concluidos': paginator_c.get_page(page_concluidos),
         'alunos_desistentes': paginator_d.get_page(page_desistentes),
         'pessoas': Pessoa.objects.all(),
+        'sexos': Sexo.objects.all(),
         'todas_pessoas': Pessoa.objects.all(),
         'turnos_estuda': TurnoEstuda.objects.all(),
         'aprendizagens': Aprendizagem.objects.all(),
