@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block 'title' %}
-Acompanhamento
+Acompanhamento - Ratel Solutions
 {% endblock %}
 
 {% block 'content' %}
@@ -10,348 +10,346 @@ Acompanhamento
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
 
-<div class="container mt-4">
+<style>
+    /* Cores customizadas da marca Ratel Solutions */
+    :root {
+        --ratel-dark: #002244;
+        --ratel-blue: #0066FF;
+        --ratel-light-bg: #F4F7FA;
+        --ratel-gray-text: #5A6A85;
+    }
 
-    <h1 class="mb-4 text-center">
-        Dashboard de Acompanhamento
-    </h1>
+    body {
+        background-color: var(--ratel-light-bg);
+    }
 
-    <!-- CARDS -->
-    <div class="row mb-4">
+    /* Customização do Menu Lateral */
+    .bg-ratel-sidebar {
+        background-color: var(--ratel-dark) !important;
+        border-right: 3px solid var(--ratel-blue);
+    }
 
-        <div class="col-md-3 mb-3">
-            <div class="card shadow border-0 text-center h-100">
-                <div class="card-body p-3">
-                    <h6>Total de alunos</h6>
-                    <h4 id="totalAlunos">0</h4>
+    .btn-ratel-nav {
+        color: #ffffff !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        transition: all 0.3s ease;
+    }
+
+    .btn-ratel-nav:hover, .btn-ratel-nav.active {
+        background-color: var(--ratel-blue) !important;
+        color: #ffffff !important;
+        border-color: var(--ratel-blue) !important;
+        box-shadow: 0 4px 10px rgba(0, 102, 255, 0.2);
+    }
+
+    /* Títulos e Cards */
+    .text-ratel-title {
+        color: var(--ratel-dark);
+        font-weight: 700;
+    }
+
+    .card-ratel-stat {
+        border-left: 4px solid var(--ratel-blue) !important;
+    }
+
+    .card-ratel-stat h6 {
+        color: var(--ratel-gray-text);
+        text-uppercase: uppercase;
+        font-size: 11px;
+        letter-spacing: 0.5px;
+        font-weight: 700;
+    }
+
+    .card-ratel-stat h4, .card-ratel-stat h5, .card-ratel-stat h6.stat-val {
+        color: var(--ratel-dark);
+        font-weight: 700;
+        margin-bottom: 0;
+    }
+
+    /* Seções de Gráficos */
+    .section-title {
+        color: var(--ratel-dark);
+        font-weight: 700;
+        border-bottom: 2px solid #B0CFF7;
+        padding-bottom: 6px;
+        margin-top: 2rem;
+        margin-bottom: 1.5rem;
+    }
+
+    /* Customização das Gavetas Laterais (Offcanvas) */
+    .offcanvas-ratel-header {
+        background-color: #EBF2FA !important;
+        border-bottom: 2px solid var(--ratel-blue) !important;
+    }
+
+    /* Animação do Sino Notificações */
+    @keyframes ringing {
+        0% { transform: rotate(0); }
+        15% { transform: rotate(15deg); }
+        30% { transform: rotate(-15deg); }
+        45% { transform: rotate(10deg); }
+        60% { transform: rotate(-10deg); }
+        75% { transform: rotate(5deg); }
+        85% { transform: rotate(-5deg); }
+        100% { transform: rotate(0); }
+    }
+
+    .bell-animation {
+        animation: ringing 2s ease-in-out infinite;
+        transform-origin: top center;
+    }
+</style>
+
+<div class="container-fluid">
+    <div class="row">
+
+        <aside class="col-md-2 bg-ratel-sidebar text-white min-vh-100 p-3 d-flex flex-column align-items-center">
+            <div class="w-100 text-center mb-4 p-2 bg-white rounded shadow-sm">
+                <img src="{% static 'img/logo.jpeg' %}" alt="Ratel Solutions Logo" class="img-fluid" style="max-height: 80px; object-fit: contain;">
+            </div>
+            
+            <h6 class="text-uppercase tracking-wider text-muted small fw-bold mb-3 w-100 ps-2" style="letter-spacing: 1px;">Navegação</h6>
+
+            <div class="d-grid gap-2 w-100">
+                <a href="{% url 'dashboard' %}" class="btn btn-ratel-nav text-start">
+                    Pré‑Aprendizagem / Aprendizagem
+                </a>
+                <a href="{% url 'dashboard_second' %}" class="btn btn-ratel-nav text-start">
+                    Concluídos / Desistentes
+                </a>
+                <a href="{% url 'pagina_graficos' %}" class="btn btn-ratel-nav text-start active">
+                    Acompanhamento
+                </a>
+                <button type="button" class="btn btn-ratel-nav text-start border-0 bg-transparent" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNotificacoes" aria-controls="offcanvasNotificacoes">
+                    Notificação
+                </button>
+            </div>
+        </aside>
+
+        <main class="col-md-10 p-4">
+
+            <div class="container-fluid px-0">
+                <h2 class="text-ratel-title mb-4">Dashboard de Acompanhamento</h2>
+
+                <div class="row mb-4">
+                    <div class="col-md-3 mb-3">
+                        <div class="card shadow-sm border-0 text-center h-100 card-ratel-stat">
+                            <div class="card-body p-3 d-flex flex-column justify-content-center">
+                                <h6 class="mb-2">Total de alunos</h6>
+                                <h4 id="totalAlunos">0</h4>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3 mb-3">
+                        <div class="card shadow-sm border-0 text-center h-100 card-ratel-stat">
+                            <div class="card-body p-3 d-flex flex-column justify-content-center">
+                                <h6 class="mb-2">Cursos ativos</h6>
+                                <h4 id="totalCursos">0</h4>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3 mb-3">
+                        <div class="card shadow-sm border-0 text-center h-100 card-ratel-stat">
+                            <div class="card-body p-3 d-flex flex-column justify-content-center">
+                                <h6 class="mb-2">Bairro/Cidade com mais alunos</h6>
+                                <h6 id="totalBairros" class="stat-val text-truncate px-2">-</h6>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3 mb-3">
+                        <div class="card shadow-sm border-0 text-center h-100 card-ratel-stat">
+                            <div class="card-body p-3 d-flex flex-column justify-content-center">
+                                <h6 class="mb-2">Turno mais frequente</h6>
+                                <h5 id="turnoMais">-</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h4 class="section-title">Turno em que os alunos estudam</h4>
+                <div class="row mb-4">
+                    <div class="col-md-6 mb-3">
+                        <div class="card shadow-sm border-0 p-3 h-100">
+                            <h5 class="text-center mb-3 text-secondary small text-uppercase fw-bold">Turnos (Barras)</h5>
+                            <div style="height:250px;">
+                                <canvas id="graficoTurnoBarra"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <div class="card shadow-sm border-0 p-3 h-100">
+                            <h5 class="text-center mb-3 text-secondary small text-uppercase fw-bold">Turnos (Pizza)</h5>
+                            <div style="height:250px;">
+                                <canvas id="graficoTurnoPizza"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card shadow-sm border-0 p-3 mb-5 bg-white">
+                    <h5 class="mb-3 text-ratel-title fs-6">Legenda dos Turnos</h5>
+                    <div id="legendaTurnos"></div>
+                </div>
+
+                <h4 class="section-title">Alunos por Bairro</h4>
+                <div class="row mb-4">
+                    <div class="col-md-6 mb-3">
+                        <div class="card shadow-sm border-0 p-3 h-100">
+                            <h5 class="text-center mb-3 text-secondary small text-uppercase fw-bold">Bairros (Barras)</h5>
+                            <div style="height:250px;">
+                                <canvas id="graficoBairros"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <div class="card shadow-sm border-0 p-3 h-100">
+                            <h5 class="text-center mb-3 text-secondary small text-uppercase fw-bold">Bairros (Pizza)</h5>
+                            <div style="height:250px;">
+                                <canvas id="graficoBairrosPizza"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card shadow-sm border-0 p-3 mb-5 bg-white">
+                    <h5 class="mb-3 text-ratel-title fs-6">Legenda dos Bairros</h5>
+                    <div id="legendaBairros"></div>
+                </div>
+
+                <h4 class="section-title">Cursos Mais Procurados</h4>
+                <div class="row mb-4">
+                    <div class="col-md-6 mb-3">
+                        <div class="card shadow-sm border-0 p-3 h-100">
+                            <h5 class="text-center mb-3 text-secondary small text-uppercase fw-bold">Cursos (Barras)</h5>
+                            <div style="height:250px;">
+                                <canvas id="graficoCursos"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <div class="card shadow-sm border-0 p-3 h-100">
+                            <h5 class="text-center mb-3 text-secondary small text-uppercase fw-bold">Cursos (Pizza)</h5>
+                            <div style="height:250px;">
+                                <canvas id="graficoCursosPizza"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card shadow-sm border-0 p-3 mb-5 bg-white">
+                    <h5 class="mb-3 text-ratel-title fs-6">Legenda dos Cursos</h5>
+                    <div id="legendaCursos"></div>
+                </div>
+
+                <h4 class="section-title">Faixa Etária</h4>
+                <div class="row mb-4">
+                    <div class="col-md-6 mb-3">
+                        <div class="card shadow-sm border-0 p-3 h-100">
+                            <h5 class="text-center mb-3 text-secondary small text-uppercase fw-bold">Idades (Barras)</h5>
+                            <div style="height:250px;">
+                                <canvas id="graficoIdade"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <div class="card shadow-sm border-0 p-3 h-100">
+                            <h5 class="text-center mb-3 text-secondary small text-uppercase fw-bold">Idades (Pizza)</h5>
+                            <div style="height:250px;">
+                                <canvas id="graficoIdadePizza"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card shadow-sm border-0 p-3 mb-5 bg-white">
+                    <h5 class="mb-3 text-ratel-title fs-6">Legenda das Idades</h5>
+                    <div id="legendaIdades"></div>
+                </div>
+
+                <h4 class="section-title">Escolaridade</h4>
+                <div class="row mb-4">
+                    <div class="col-md-6 mb-3">
+                        <div class="card shadow-sm border-0 p-3 h-100">
+                            <h5 class="text-center mb-3 text-secondary small text-uppercase fw-bold">Escolaridade (Barras)</h5>
+                            <div style="height:250px;">
+                                <canvas id="graficoEscolaridadeBarra"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <div class="card shadow-sm border-0 p-3 h-100">
+                            <h5 class="text-center mb-3 text-secondary small text-uppercase fw-bold">Escolaridade (Pizza)</h5>
+                            <div style="height:250px;">
+                                <canvas id="graficoEscolaridadePizza"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card shadow-sm border-0 p-3 mb-5 bg-white">
+                    <h5 class="mb-3 text-ratel-title fs-6">Legenda da Escolaridade</h5>
+                    <div id="legendaEscolaridade"></div>
+                </div>
+
+                <h4 class="section-title">Outros Gráficos de Controle</h4>
+                <div class="card shadow-sm border-0 p-4 mb-5 bg-white">
+                    <div class="d-flex flex-wrap gap-3 justify-content-start">
+                        <button class="btn text-white px-4 py-2" style="background-color: var(--ratel-dark);" data-bs-toggle="modal" data-bs-target="#modalAprendizagem">
+                            Aprendizagem
+                        </button>
+
+                        <button class="btn text-white px-4 py-2" style="background-color: var(--ratel-dark);" data-bs-toggle="modal" data-bs-target="#modalEmpresas">
+                            Nome Social
+                        </button>
+
+                        <button class="btn text-white px-4 py-2" style="background-color: var(--ratel-dark);" data-bs-toggle="modal" data-bs-target="#modalNomeSocial">
+                            Turno do Profissional de Referência
+                        </button>
+
+                        <button class="btn text-white px-4 py-2" style="background-color: var(--ratel-dark);" data-bs-toggle="modal" data-bs-target="#modalEntidade">
+                            Entidade Formadora 
+                        </button>
+
+                        <button class="btn text-white px-4 py-2" style="background-color: var(--ratel-dark);" data-bs-toggle="modal" data-bs-target="#modalTurnoVagas">
+                            Turno das Vagas dos Cursos
+                        </button>
+
+                        <button class="btn text-white px-4 py-2" style="background-color: var(--ratel-dark);" data-bs-toggle="modal" data-bs-target="#modalUnidade">
+                            Unidade de Atuação
+                        </button>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="col-md-3 mb-3">
-            <div class="card shadow border-0 text-center h-100">
-                <div class="card-body p-3">
-                    <h6>Cursos ativos</h6>
-                    <h4 id="totalCursos">0</h4>
+            <div class="offcanvas offcanvas-end text-dark" tabindex="-1" id="offcanvasNotificacoes" aria-labelledby="offcanvasNotificacoesLabel" style="width: 420px;">
+                <div class="offcanvas-header offcanvas-ratel-header">
+                    <h5 class="offcanvas-title fw-bold text-ratel-title" id="offcanvasNotificacoesLabel">Notificações</h5>
+                    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body d-flex flex-column align-items-center justify-content-center text-center p-4">
+                    <div class="mb-4">
+                        <h5 class="fw-bold text-dark mb-1">Não há notificações</h5>
+                        <p class="text-muted small">Seu painel corporativo está totalmente atualizado.</p>
+                    </div>
+                    <div class="p-4 rounded-circle bg-white shadow-sm d-flex align-items-center justify-content-center" style="width: 140px; height: 140px;">
+                        <svg class="bell-animation text-primary" width="70" height="70" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M9.17021 20.0003C9.58245 21.1633 10.6934 22.0003 11.9995 22.0003C13.3057 22.0003 14.4166 21.1633 14.8288 20.0003H9.17021Z" fill="#002244"/>
+                            <path d="M19.3364 15.0001C18.6669 14.3644 18.0005 12.8344 18.0005 10.0001C18.0005 6.90301 15.6027 4.35412 12.6304 4.04102C12.4335 2.8714 11.4253 2.00012 12.0005 2.00012C12.5757 2.00012 11.5675 2.8714 11.3706 4.04102C8.39828 4.35412 6.00049 6.90301 6.00049 10.0001C6.00049 12.8344 5.33406 14.3644 4.66459 15.0001C4.10301 15.5334 3.79155 16.2755 3.84074 17.042C3.89679 17.9152 4.62312 18.6001 5.50049 18.6001H18.5005C19.3779 18.6001 20.1042 17.9152 20.1602 17.042C20.2094 16.2755 19.898 15.5334 19.3364 15.0001Z" fill="#0066FF"/>
+                        </svg>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="col-md-3 mb-3">
-            <div class="card shadow border-0 text-center h-100">
-                <div class="card-body p-3">
-                    <h6>Bairro/Cidade com mais alunos</h6>
-                    <h6 id="totalBairros">-</h6>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-3 mb-3">
-            <div class="card shadow border-0 text-center h-100">
-                <div class="card-body p-3">
-                    <h6>Turno mais frequente</h6>
-                    <h5 id="turnoMais">-</h5>
-                </div>
-            </div>
-        </div>
-        
-
+        </main>
     </div>
-
-
-    <!-- TURNOS -->
-<h3>Turno em que os alunos estudam</h3>
-
-    <div class="row mb-3">
-
-        <div class="col-md-6 mb-3">
-
-            <div class="card shadow p-3 h-100">
-
-                <h5 class="text-center mb-3">
-                    Turnos (Barras)
-                </h5>
-
-                <div style="height:250px;">
-                    <canvas id="graficoTurnoBarra"></canvas>
-                </div>
-
-            </div>
-
-        </div>
-
-        <div class="col-md-6 mb-3">
-
-            <div class="card shadow p-3 h-100">
-
-                <h5 class="text-center mb-3">
-                    Turnos (Pizza)
-                </h5>
-
-                <div style="height:250px;">
-                    <canvas id="graficoTurnoPizza"></canvas>
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    <div class="card shadow p-3 mb-5">
-        <h5 class="text-center mb-3">Legenda dos Turnos</h5>
-        <div id="legendaTurnos"></div>
-    </div>
-
-
-    <!-- BAIRROS -->
-    <h3>Alunos por Bairro</h3>
-
-    <div class="row mb-3">
-
-        <div class="col-md-6 mb-3">
-
-            <div class="card shadow p-3 h-100">
-
-                <h5 class="text-center mb-3">
-                    Bairros (Barras)
-                </h5>
-
-                <div style="height:250px;">
-                    <canvas id="graficoBairros"></canvas>
-                </div>
-
-            </div>
-
-        </div>
-
-        <div class="col-md-6 mb-3">
-
-            <div class="card shadow p-3 h-100">
-
-                <h5 class="text-center mb-3">
-                    Bairros (Pizza)
-                </h5>
-
-                <div style="height:250px;">
-                    <canvas id="graficoBairrosPizza"></canvas>
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    <div class="card shadow p-3 mb-5">
-        <h5 class="text-center mb-3">Legenda dos Bairros</h5>
-        <div id="legendaBairros"></div>
-    </div>
-
-
-    <!-- CURSOS -->
-    <h3>Cursos Mais Procurados</h3>
-
-    <div class="row mb-3">
-
-        <div class="col-md-6 mb-3">
-
-            <div class="card shadow p-3 h-100">
-
-                <h5 class="text-center mb-3">
-                    Cursos (Barras)
-                </h5>
-
-                <div style="height:250px;">
-                    <canvas id="graficoCursos"></canvas>
-                </div>
-
-            </div>
-
-        </div>
-
-        <div class="col-md-6 mb-3">
-
-            <div class="card shadow p-3 h-100">
-
-                <h5 class="text-center mb-3">
-                    Cursos (Pizza)
-                </h5>
-
-                <div style="height:250px;">
-                    <canvas id="graficoCursosPizza"></canvas>
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    <div class="card shadow p-3 mb-5">
-        <h5 class="text-center mb-3">Legenda dos Cursos</h5>
-        <div id="legendaCursos"></div>
-    </div>
-
-
-    <!-- IDADES -->
-    <h3>Faixa Etária</h3>
-
-    <div class="row mb-3">
-
-        <div class="col-md-6 mb-3">
-
-            <div class="card shadow p-3 h-100">
-
-                <h5 class="text-center mb-3">
-                    Idades (Barras)
-                </h5>
-
-                <div style="height:250px;">
-                    <canvas id="graficoIdade"></canvas>
-                </div>
-
-            </div>
-
-        </div>
-
-        <div class="col-md-6 mb-3">
-
-            <div class="card shadow p-3 h-100">
-
-                <h5 class="text-center mb-3">
-                    Idades (Pizza)
-                </h5>
-
-                <div style="height:250px;">
-                    <canvas id="graficoIdadePizza"></canvas>
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    <div class="card shadow p-3 mb-5">
-        <h5 class="text-center mb-3">Legenda das Idades</h5>
-        <div id="legendaIdades"></div>
-    </div>
-
-
-    <!-- ESCOLARIDADE -->
-    <h3>Escolaridade</h3>
-
-    <div class="row mb-3">
-
-        <div class="col-md-6 mb-3">
-
-            <div class="card shadow p-3 h-100">
-
-                <h5 class="text-center mb-3">
-                    Escolaridade (Barras)
-                </h5>
-
-                <div style="height:250px;">
-                    <canvas id="graficoEscolaridadeBarra"></canvas>
-                </div>
-
-            </div>
-
-        </div>
-
-        <div class="col-md-6 mb-3">
-
-            <div class="card shadow p-3 h-100">
-
-                <h5 class="text-center mb-3">
-                    Escolaridade (Pizza)
-                </h5>
-
-                <div style="height:250px;">
-                    <canvas id="graficoEscolaridadePizza"></canvas>
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    <div class="card shadow p-3 mb-5">
-        <h5 class="text-center mb-3">Legenda da Escolaridade</h5>
-        <div id="legendaEscolaridade"></div>
-    </div>
-
-    <h2>Outros Gráficos</h2>
-
-    <div class="mt-5">
-
-    <div class="d-flex flex-wrap gap-3 justify-content-start">
-
-       <button
-            class="btn text-white"
-            style="background-color:#2d90bd;"
-            data-bs-toggle="modal"
-            data-bs-target="#modalAprendizagem">
-
-            Aprendizagem
-        </button>
-
-        <button
-            class="btn text-white"
-            style="background-color:#2d90bd;"
-            data-bs-toggle="modal"
-            data-bs-target="#modalEmpresas">
-
-            Nome Social
-
-        </button>
-
-        <button
-            class="btn text-white"
-            style="background-color:#2d90bd;"
-            data-bs-toggle="modal"
-            data-bs-target="#modalNomeSocial">
-
-            Turno do Profissional de Referência
-
-        </button>
-
-        <button
-            class="btn text-white"
-            style="background-color:#2d90bd;"
-            data-bs-toggle="modal"
-            data-bs-target="#modalEntidade">
-
-            Entidade Formadora 
-
-        </button>
-
-        <button
-            class="btn text-white"
-            style="background-color:#2d90bd;"
-            data-bs-toggle="modal"
-            data-bs-target="#modalTurnoVagas">
-
-            Turno das Vagas dos Cursos
-
-        </button>
-
-        <button
-            class="btn text-white"
-            style="background-color:#2d90bd;"
-            data-bs-toggle="modal"
-            data-bs-target="#modalUnidade">
-
-            Unidade de Atuação
-
-        </button>
-
-    </div>
-
-</div>
-
 </div>
 
 {% include 'acompanhamento/grafico_aprendizagem.html' %}

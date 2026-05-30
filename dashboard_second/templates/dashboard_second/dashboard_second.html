@@ -1,287 +1,325 @@
 {% extends 'base.html' %}
-{% block 'title' %}Dashboard{% endblock %}
+{% load static %}
+{% block 'title' %}Dashboard - Ratel Solutions{% endblock %}
 {% block 'content' %}
+
+<style>
+    /* Cores customizadas da marca Ratel Solutions */
+    :root {
+        --ratel-dark: #002244;
+        --ratel-blue: #0066FF;
+        --ratel-light-bg: #F4F7FA;
+        --ratel-gray-text: #5A6A85;
+    }
+
+    body {
+        background-color: var(--ratel-light-bg);
+    }
+
+    /* Customização do Menu Lateral */
+    .bg-ratel-sidebar {
+        background-color: var(--ratel-dark) !important;
+        border-right: 3px solid var(--ratel-blue);
+    }
+
+    .btn-ratel-nav {
+        color: #ffffff !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        transition: all 0.3s ease;
+    }
+
+    .btn-ratel-nav:hover, .btn-ratel-nav.active {
+        background-color: var(--ratel-blue) !important;
+        color: #ffffff !important;
+        border-color: var(--ratel-blue) !important;
+        box-shadow: 0 4px 10px rgba(0, 102, 255, 0.2);
+    }
+
+    /* Botões do Sistema */
+    .btn-primary {
+        background-color: var(--ratel-blue) !important;
+        border-color: var(--ratel-blue) !important;
+    }
+    .btn-primary:hover {
+        background-color: #0052cc !important;
+        border-color: #0052cc !important;
+    }
+
+    /* Cabeçalhos das Tabelas */
+    .table-ratel-header th {
+        background-color: #EBF2FA !important;
+        color: var(--ratel-dark) !important;
+        font-weight: 700;
+        border-bottom: 2px solid #B0CFF7 !important;
+    }
+
+    .table-ratel tbody tr:nth-of-type(odd) td {
+        background-color: #ffffff !important;
+    }
+
+    .table-ratel tbody tr:nth-of-type(even) td {
+        background-color: #EBF2FA !important; 
+    }
+
+    .table-ratel tbody tr:hover td {
+        background-color: rgba(0, 102, 255, 0.15) !important;
+        transition: background-color 0.15s ease-in-out;
+    }
+    
+    .text-ratel-title {
+        color: var(--ratel-dark);
+        font-weight: 700;
+    }
+
+    .offcanvas-ratel-header {
+        background-color: #EBF2FA !important;
+        border-bottom: 2px solid var(--ratel-blue) !important;
+    }
+
+    .list-group-ratel-section {
+        background-color: #EBF2FA !important;
+        color: var(--ratel-dark) !important;
+        border-left: 4px solid var(--ratel-blue) !important;
+    }
+</style>
 
 <div class="container-fluid">
     <div class="row">
 
-    <!-- MENU LATERAL -->
-    <aside class="col-md-2 bg-dark text-white min-vh-100 p-3">
-
-        <h4 class="text-center mb-4">
-            Dashboard
-        </h4>
-
-        <div class="d-grid gap-2">
-
-            <a href="{% url 'dashboard' %}"
-               class="btn btn-outline-light text-start">
-
-                Pré-Aprendizagem / Aprendizagem
-
-            </a>
-
-            <a href="{% url 'dashboard_second' %}"
-               class="btn btn-outline-light text-start active">
-
-                Concluídos / Desistentes
-
-            </a>
-
-            <a href="{% url 'pagina_graficos' %}"
-               class="btn btn-outline-light text-start">
-
-                Acompanhamento
-
-            </a>
-
-        </div>
-
-    </aside>
-
-    <!-- CONTEÚDO -->
-    <main class="col-md-10 p-4">
-
-        <!-- FILTROS -->
-        <div class="container-fluid">
-
-            <form method="GET" class="row g-3">
-
-                <div class="col-md-4">
-
-                    <label class="form-label">
-                        <strong>Nome do aluno</strong>
-                    </label>
-
-                    <input type="text"
-                           name="nome"
-                           class="form-control"
-                           value="{{ request.GET.nome }}">
-
-                </div>
-
-                <div class="col-md-4">
-
-                    <label class="form-label">
-                        <strong>Profissional responsável</strong>
-                    </label>
-
-                    <select name="profissional"
-                            class="form-select">
-
-                        <option value="">
-                            Todos
-                        </option>
-
-                        {% for pessoa in pessoas %}
-                            <option value="{{ pessoa.id }}"
-                            {% if request.GET.profissional == pessoa.id|stringformat:"s" %}
-                                selected
-                            {% endif %}>
-                                {{ pessoa.nome }}
-                            </option>
-                        {% endfor %}
-
-                    </select>
-
-                </div>
-
-                {% if eh_admin %}
-                <div class="col-md-4">
-
-                    <label class="form-label">
-                        <strong>Funcionário que cadastrou</strong>
-                    </label>
-
-                    <select name="cadastrado_por"
-                            class="form-select">
-
-                        <option value="">
-                            Todos
-                        </option>
-
-                        {% for pessoa in todas_pessoas %}
-                            <option value="{{ pessoa.id }}"
-                            {% if request.GET.cadastrado_por == pessoa.id|stringformat:"s" %}
-                                selected
-                            {% endif %}>
-                                {{ pessoa.nome }}
-                            </option>
-                        {% endfor %}
-
-                    </select>
-
-                </div>
-                {% endif %}
-
-                <div class="col-12 d-flex gap-2">
-
-                    <button class="btn btn-primary">
-                        Filtrar
-                    </button>
-
-                    <a href="{% url 'dashboard_second' %}"
-                       class="btn btn-secondary">
-
-                        Limpar
-
-                    </a>
-
-                </div>
-
-            </form>
-
-        </div>
-
-        <!-- TÍTULO -->
-        <div class="mt-5">
-
-            <div class="d-flex justify-content-between align-items-center mb-4">
-
-                <h4 class="mb-0">
-                    Alunos Concluídos / Desistência
-                </h4>
-
+        <aside class="col-md-2 bg-ratel-sidebar text-white min-vh-100 p-3 d-flex flex-column align-items-center">
+            <div class="w-100 text-center mb-4 p-2 bg-white rounded shadow-sm">
+                <img src="{% static 'img/logo.jpeg' %}" alt="Ratel Solutions Logo" class="img-fluid" style="max-height: 80px; object-fit: contain;">
             </div>
+            
+            <h6 class="text-uppercase tracking-wider text-muted small fw-bold mb-3 w-100 ps-2" style="letter-spacing: 1px;">Navegação</h6>
 
-            <!-- TABELA -->
-            <div class="card shadow">
+            <div class="d-grid gap-2 w-100">
+                <a href="{% url 'dashboard' %}" class="btn btn-ratel-nav text-start">
+                    Pré‑Aprendizagem / Aprendizagem
+                </a>
+                <a href="{% url 'dashboard_second' %}" class="btn btn-ratel-nav text-start active">
+                    Concluídos / Desistentes
+                </a>
+                <a href="{% url 'pagina_graficos' %}" class="btn btn-ratel-nav text-start">
+                    Acompanhamento
+                </a>
+                <button type="button" class="btn btn-ratel-nav text-start border-0 bg-transparent" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNotificacoes" aria-controls="offcanvasNotificacoes">
+                    Notificação
+                </button>
+            </div>
+        </aside>
 
-                <div class="card-body">
+        <main class="col-md-10 p-4">
 
-                    <div class="table-responsive">
-
-                        <table class="table table-hover align-middle">
-
-                            <thead class="table-light">
-
-                                <tr>
-                                    <th>Nome</th>
-                                    <th>Telefone</th>
-                                    <th>Email</th>
-                                    <th>Status</th>
-                                    <th>Ações</th>
-                                </tr>
-
-                            </thead>
-
-                            <tbody>
-
-                                {% for aluno in alunos %}
-
-                                <tr>
-
-                                    <td>
-                                        {{ aluno.nome_social|default:aluno.nome }}
-                                    </td>
-
-                                    <td>
-                                        {{ aluno.telefone }}
-                                    </td>
-
-                                    <td>
-                                        {{ aluno.email }}
-                                    </td>
-
-                                    <td>
-
-                                        {% if aluno.status == 'desistencia' %}
-
-                                            <span class="badge bg-danger">
-                                                Desistência
-                                            </span>
-
-                                        {% else %}
-
-                                            <span class="badge bg-success">
-                                                Concluído
-                                            </span>
-
-                                        {% endif %}
-
-                                    </td>
-
-                                    <td>
-
-                                        <button class="btn btn-primary btn-sm"
-                                                data-bs-toggle="modal"
-                                                data-bs-target="#modalAluno{{ aluno.id }}">
-
-                                            Editar
-
-                                        </button>
-
-                                    </td>
-
-                                </tr>
-
-                                <!-- MANTÉM O MODAL ORIGINAL -->
-                                <!-- COLE SEU modalAluno{{ aluno.id }} AQUI -->
-
-                                {% empty %}
-
-                                <tr>
-
-                                    <td colspan="5"
-                                        class="text-center">
-
-                                        Nenhum aluno cadastrado.
-
-                                    </td>
-
-                                </tr>
-
-                                {% endfor %}
-
-                            </tbody>
-
-                        </table>
-
+            <div class="container-fluid bg-white p-4 rounded shadow-sm mb-4">
+                <form method="GET" class="row g-3">
+                    <div class="col-md-4">
+                        <label class="form-label text-ratel-title small text-uppercase"><strong>Nome do aluno</strong></label>
+                        <input type="text" name="nome" class="form-control" value="{{ request.GET.nome }}">
                     </div>
 
+                    <div class="col-md-4">
+                        <label class="form-label text-ratel-title small text-uppercase"><strong>Profissional responsável</strong></label>
+                        <select name="profissional" class="form-select">
+                            <option value="">Todos</option>
+                            {% for pessoa in pessoas %}
+                                <option value="{{ pessoa.id }}" {% if request.GET.profissional == pessoa.id|stringformat:"s" %}selected{% endif %}>
+                                    {{ pessoa.nome }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    {% if eh_admin %}
+                    <div class="col-md-4">
+                        <label class="form-label text-ratel-title small text-uppercase"><strong>Funcionário que cadastrou</strong></label>
+                        <select name="cadastrado_por" class="form-select">
+                            <option value="">Todos</option>
+                            {% for pessoa in todas_pessoas %}
+                                <option value="{{ pessoa.id }}" {% if request.GET.cadastrado_por == pessoa.id|stringformat:"s" %}selected{% endif %}>
+                                    {{ pessoa.nome }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    {% endif %}
+
+                    <div class="col-12 d-flex gap-2 mt-4">
+                        <button class="btn btn-primary px-4">Filtrar</button>
+                        <a href="{% url 'dashboard_second' %}" class="btn btn-secondary px-4">Limpar</a>
+                    </div>
+                </form>
+            </div>
+
+            <div class="mt-4 mb-5">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4 class="text-ratel-title">
+                        Alunos Concluídos 
+                        <span class="badge bg-success ms-2" style="font-size: 0.9rem;">Total: {{ alunos_concluidos_count|default:"0" }}</span>
+                    </h4>
                 </div>
 
+                <div class="card shadow-sm border-0">
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-ratel align-middle mb-0">
+                                <thead>
+                                    <tr class="table-ratel-header">
+                                        <th class="ps-4">Nome</th>
+                                        <th>Telefone</th>
+                                        <th>Email</th>
+                                        <th>Status</th>
+                                        <th class="text-end pe-4">Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for aluno in alunos_concluidos %}
+                                    <tr>
+                                        <td class="ps-4 fw-semibold text-dark">{{ aluno.nome_social|default:aluno.nome }}</td>
+                                        <td>{{ aluno.telefone|default:"--" }}</td>
+                                        <td>{{ aluno.email }}</td>
+                                        <td><span class="badge bg-success">Concluído</span></td>
+                                        <td class="text-end pe-4">
+                                            <button class="btn btn-primary btn-sm px-3" data-bs-toggle="offcanvas" data-bs-target="#offcanvasConcluido{{ aluno.id }}">Editar</button>
+                                        </td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="5" class="text-center py-4 text-muted">Nenhum aluno concluído no momento.</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <!-- PAGINAÇÃO -->
-            <div class="d-flex justify-content-center align-items-center gap-3 mt-4 mb-5">
+            <div class="mt-4 mb-5">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4 class="text-ratel-title">
+                        Alunos em Desistência
+                        <span class="badge bg-danger ms-2" style="font-size: 0.9rem;">Total: {{ alunos_desistentes_count|default:"0" }}</span>
+                    </h4>
+                </div>
 
-                {% if alunos.has_previous %}
-
-                <a href="?page={{ alunos.previous_page_number }}"
-                   class="btn btn-outline-primary">
-
-                    ← Anterior
-
-                </a>
-
-                {% endif %}
-
-                <span>
-                    Página {{ alunos.number }}
-                    de
-                    {{ alunos.paginator.num_pages }}
-                </span>
-
-                {% if alunos.has_next %}
-
-                <a href="?page={{ alunos.next_page_number }}"
-                   class="btn btn-outline-primary">
-
-                    Próxima →
-
-                </a>
-
-                {% endif %}
-
+                <div class="card shadow-sm border-0">
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-ratel align-middle mb-0">
+                                <thead>
+                                    <tr class="table-ratel-header">
+                                        <th class="ps-4">Nome</th>
+                                        <th>Telefone</th>
+                                        <th>Email</th>
+                                        <th>Status</th>
+                                        <th class="text-end pe-4">Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for aluno in alunos_desistentes %}
+                                    <tr>
+                                        <td class="ps-4 fw-semibold text-dark">{{ aluno.nome_social|default:aluno.nome }}</td>
+                                        <td>{{ aluno.telefone|default:"--" }}</td>
+                                        <td>{{ aluno.email }}</td>
+                                        <td><span class="badge bg-danger">Desistência</span></td>
+                                        <td class="text-end pe-4">
+                                            <button class="btn btn-primary btn-sm px-3" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDesistente{{ aluno.id }}">Editar</button>
+                                        </td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="5" class="text-center py-4 text-muted">Nenhum aluno em lista de desistência.</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-        </div>
+            {% for aluno in alunos_concluidos %}
+            <div class="offcanvas offcanvas-start text-dark" tabindex="-1" id="offcanvasConcluido{{ aluno.id }}" style="width: 480px;">
+                <div class="offcanvas-header offcanvas-ratel-header">
+                    <h5 class="offcanvas-title fw-bold text-ratel-title">Editar Cadastro (Concluído)</h5>
+                    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"></button>
+                </div>
+                <div class="offcanvas-body">
+                    <form method="POST" action=""> 
+                        {% csrf_token %}
+                        <input type="hidden" name="aluno_id" value="{{ aluno.id }}">
+                        <ul class="list-group list-group-flush mb-4">
+                            <li class="list-group-item px-0 py-2 list-group-ratel-section ps-2 fw-bold small text-uppercase">Dados Pessoais</li>
+                            <li class="list-group-item px-0 py-2 border-0 border-bottom">
+                                <label class="form-label fw-bold text-secondary text-uppercase small mb-1">Nome Completo</label>
+                                <input type="text" name="nome" class="form-control" value="{{ aluno.nome }}" required>
+                            </li>
+                            <li class="list-group-item px-0 py-2 border-0 border-bottom">
+                                <label class="form-label fw-bold text-secondary text-uppercase small mb-1">Nome Social</label>
+                                <input type="text" name="nome_social" class="form-control" value="{{ aluno.nome_social|default:'' }}">
+                            </li>
+                        </ul>
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-success py-2 fw-bold">Salvar Alterações</button>
+                            <button type="button" class="btn btn-outline-secondary py-2" data-bs-dismiss="offcanvas">Cancelar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
 
-    </main>
+            {% for aluno in alunos_desistentes %}
+            <div class="offcanvas offcanvas-start text-dark" tabindex="-1" id="offcanvasDesistente{{ aluno.id }}" style="width: 480px;">
+                <div class="offcanvas-header offcanvas-ratel-header">
+                    <h5 class="offcanvas-title fw-bold text-ratel-title">Editar Cadastro (Desistente)</h5>
+                    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"></button>
+                </div>
+                <div class="offcanvas-body">
+                    <form method="POST" action=""> 
+                        {% csrf_token %}
+                        <input type="hidden" name="aluno_id" value="{{ aluno.id }}">
+                        <ul class="list-group list-group-flush mb-4">
+                            <li class="list-group-item px-0 py-2 list-group-ratel-section ps-2 fw-bold small text-uppercase">Dados Pessoais</li>
+                            <li class="list-group-item px-0 py-2 border-0 border-bottom">
+                                <label class="form-label fw-bold text-secondary text-uppercase small mb-1">Nome Completo</label>
+                                <input type="text" name="nome" class="form-control" value="{{ aluno.nome }}" required>
+                            </li>
+                            <li class="list-group-item px-0 py-2 border-0 border-bottom">
+                                <label class="form-label fw-bold text-secondary text-uppercase small mb-1">Nome Social</label>
+                                <input type="text" name="nome_social" class="form-control" value="{{ aluno.nome_social|default:'' }}">
+                            </li>
+                        </ul>
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-success py-2 fw-bold">Salvar Alterações</button>
+                            <button type="button" class="btn btn-outline-secondary py-2" data-bs-dismiss="offcanvas">Cancelar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
 
+        </main>
+    </div>
 </div>
 
+<div class="offcanvas offcanvas-end text-dark" tabindex="-1" id="offcanvasNotificacoes" style="width: 420px;">
+    <div class="offcanvas-header offcanvas-ratel-header">
+        <h5 class="offcanvas-title fw-bold text-ratel-title" id="offcanvasNotificacoesLabel">Notificações</h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body d-flex flex-column align-items-center justify-content-center text-center p-4">
+        <div class="mb-4">
+            <h5 class="fw-bold text-dark mb-1">Não há notificações</h5>
+            <p class="text-muted small">Seu painel corporativo está totalmente atualizado.</p>
+        </div>
+        <div class="p-4 rounded-circle bg-white shadow-sm d-flex align-items-center justify-content-center" style="width: 140px; height: 140px;">
+            <svg class="bell-animation text-primary" width="70" height="70" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M9.17021 20.0003C9.58245 21.1633 10.6934 22.0003 11.9995 22.0003C13.3057 22.0003 14.4166 21.1633 14.8288 20.0003H9.17021Z" fill="#002244"/>
+                <path d="M19.3364 15.0001C18.6669 14.3644 18.0005 12.8344 18.0005 10.0001C18.0005 6.90301 15.6027 4.35412 12.6304 4.04102C12.4335 2.8714 11.4253 2.00012 12.0005 2.00012C12.5757 2.00012 11.5675 2.8714 11.3706 4.04102C8.39828 4.35412 6.00049 6.90301 6.00049 10.0001C6.00049 12.8344 5.33406 14.3644 4.66459 15.0001C4.10301 15.5334 3.79155 16.2755 3.84074 17.042C3.89679 17.9152 4.62312 18.6001 5.50049 18.6001H18.5005C19.3779 18.6001 20.1042 17.9152 20.1602 17.042C20.2094 16.2755 19.898 15.5334 19.3364 15.0001Z" fill="#0066FF"/>
+            </svg>
+        </div>
+    </div>
 </div>
 
 {% endblock %}
