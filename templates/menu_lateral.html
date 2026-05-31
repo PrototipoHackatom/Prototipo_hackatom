@@ -1,0 +1,49 @@
+{% load static %}
+<aside class="col-md-2 bg-ratel-sidebar text-white p-3 d-flex flex-column align-items-center sticky-sidebar">
+    <div class="w-100 text-center mb-4 p-2 bg-white rounded shadow-sm">
+        <img src="{% static 'img/logo.jpeg' %}" alt="Ratel Solutions Logo" class="img-fluid" style="max-height: 80px; object-fit: contain;">
+    </div>
+    
+    <h6 class="text-uppercase tracking-wider text-muted small fw-bold mb-3 w-100 ps-2" style="letter-spacing: 1px;">Navegação</h6>
+
+    <div class="d-grid gap-2 w-100">
+        
+        <a href="#subMenuListas" class="btn btn-ratel-nav text-start collapsed d-flex justify-content-between align-items-center" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="subMenuListas">
+            Pré‑Aprendizagem / Aprendizagem
+            <span class="small">▼</span>
+        </a>
+        
+        <div class="collapse {% if request.resolver_match.url_name == 'dashboard' or request.resolver_match.url_name == 'pagina_graficos' %}show{% endif %}" id="subMenuListas">
+            <div class="d-grid gap-1 ps-3 pt-1">
+                <a href="{% url 'dashboard' %}" class="btn btn-ratel-subnav text-start py-2 rounded {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+                    ↳ Lista de Alunos
+                </a>
+                <a href="{% url 'pagina_graficos' %}" class="btn btn-ratel-subnav text-start py-2 rounded {% if request.resolver_match.url_name == 'pagina_graficos' %}active{% endif %}">
+                    ↳ Acompanhamento
+                </a>
+            </div>
+        </div>
+
+        <a href="#subMenuConcluidos" class="btn btn-ratel-nav text-start collapsed d-flex justify-content-between align-items-center" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="subMenuConcluidos">
+            Concluídos / Desistentes
+            <span class="small">▼</span>
+        </a>
+        
+        <!-- CORREÇÃO AQUI: Adicionado verificação para graficos_second manter a sanfona aberta -->
+        <div class="collapse {% if request.resolver_match.url_name == 'dashboard_second' or request.resolver_match.url_name == 'graficos_second' %}show{% endif %}" id="subMenuConcluidos">
+            <div class="d-grid gap-1 ps-3 pt-1">
+                <a href="{% url 'dashboard_second' %}" class="btn btn-ratel-subnav text-start py-2 rounded {% if request.resolver_match.url_name == 'dashboard_second' %}active{% endif %}">
+                    ↳ Lista de Alunos
+                </a>
+                <!-- CORREÇÃO AQUI: Adicionado verificação active para pintar o botão de azul -->
+                <a href="{% url 'graficos_second' %}" class="btn btn-ratel-subnav text-start py-2 rounded {% if request.resolver_match.url_name == 'graficos_second' %}active{% endif %}">
+                    ↳ Acompanhamento
+                </a>
+            </div>
+        </div>
+        
+        <button type="button" class="btn btn-ratel-nav text-start border-0 bg-transparent mt-2" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNotificacoes" aria-controls="offcanvasNotificacoes">
+            Notificação
+        </button>
+    </div>
+</aside>

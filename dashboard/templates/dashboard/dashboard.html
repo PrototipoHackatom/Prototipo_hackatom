@@ -197,41 +197,7 @@
 <div class="container-fluid">
     <div class="row">
 
-        <aside class="col-md-2 bg-ratel-sidebar text-white min-vh-100 p-3 d-flex flex-column align-items-center">
-            <div class="w-100 text-center mb-4 p-2 bg-white rounded shadow-sm">
-                <img src="{% static 'img/logo.jpeg' %}" alt="Ratel Solutions Logo" class="img-fluid" style="max-height: 80px; object-fit: contain;">
-            </div>
-            
-            <h6 class="text-uppercase tracking-wider text-muted small fw-bold mb-3 w-100 ps-2" style="letter-spacing: 1px;">Navegação</h6>
-
-            <div class="d-grid gap-2 w-100">
-                <a href="#subMenuListas" 
-                   class="btn btn-ratel-nav text-start active d-flex justify-content-between align-items-center" 
-                   data-bs-toggle="collapse" 
-                   role="button" 
-                   aria-expanded="true" 
-                   aria-controls="subMenuListas">
-                    Pré‑Aprendizagem / Aprendizagem
-                    <span class="small">▼</span>
-                </a>
-                
-                <div class="collapse show" id="subMenuListas">
-                    <div class="d-grid gap-1 ps-3 pt-1">
-                        <a href="{% url 'pagina_graficos' %}" class="btn btn-ratel-subnav text-start py-2 rounded">
-                            ↳ Acompanhamento
-                        </a>
-                    </div>
-                </div>
-
-                <a href="{% url 'dashboard_second' %}" class="btn btn-ratel-nav text-start">
-                    Concluídos / Desistentes
-                </a>
-                
-                <button type="button" class="btn btn-ratel-nav text-start border-0 bg-transparent" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNotificacoes" aria-controls="offcanvasNotificacoes">
-                    Notificação
-                </button>
-            </div>
-        </aside>
+        {% include 'menu_lateral.html' %}
 
         <main class="col-md-10 p-4">
 
@@ -247,7 +213,7 @@
                         <select name="profissional" class="form-select">
                             <option value="">Todos</option>
                             {% for pessoa in pessoas %}
-                                <option value="{{ presidential.id }}" {% if request.GET.profissional == pessoa.id|stringformat:"s" %}selected{% endif %}>
+                                <option value="{{ pessoa.id }}" {% if request.GET.profissional == pessoa.id|stringformat:"s" %}selected{% endif %}>
                                     {{ pessoa.nome }}
                                 </option>
                             {% endfor %}
@@ -279,25 +245,6 @@
                         </button>
                     </div>
                 </form>
-            </div>
-
-            <div class="offcanvas offcanvas-end text-dark" tabindex="-1" id="offcanvasNotificacoes" aria-labelledby="offcanvasNotificacoesLabel" style="width: 420px;">
-                <div class="offcanvas-header offcanvas-ratel-header">
-                    <h5 class="offcanvas-title fw-bold text-ratel-title" id="offcanvasNotificacoesLabel">Notificações</h5>
-                    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-                </div>
-                <div class="offcanvas-body d-flex flex-column align-items-center justify-content-center text-center p-4">
-                    <div class="mb-4">
-                        <h5 class="fw-bold text-dark mb-1">Não há notificações</h5>
-                        <p class="text-muted small">Seu painel corporativo está totalmente atualizado.</p>
-                    </div>
-                    <div class="p-4 rounded-circle bg-white shadow-sm d-flex align-items-center justify-content-center" style="width: 140px; height: 140px;">
-                        <svg class="bell-animation text-primary" width="70" height="70" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M9.17021 20.0003C9.58245 21.1633 10.6934 22.0003 11.9995 22.0003C13.3057 22.0003 14.4166 21.1633 14.8288 20.0003H9.17021Z" fill="#002244"/>
-                            <path d="M19.3364 15.0001C18.6669 14.3644 18.0005 12.8344 18.0005 10.0001C18.0005 6.90301 15.6027 4.35412 12.6304 4.04102C12.4335 2.8714 11.4253 2.00012 12.0005 2.00012C12.5757 2.00012 11.5675 2.8714 11.3706 4.04102C8.39828 4.35412 6.00049 6.90301 6.00049 10.0001C6.00049 12.8344 5.33406 14.3644 4.66459 15.0001C4.10301 15.5334 3.79155 16.2755 3.84074 17.042C3.89679 17.9152 4.62312 18.6001 5.50049 18.6001H18.5005C19.3779 18.6001 20.1042 17.9152 20.1602 17.042C20.2094 16.2755 19.898 15.5334 19.3364 15.0001Z" fill="#0066FF"/>
-                        </svg>
-                    </div>
-                </div>
             </div>
 
             <div class="offcanvas offcanvas-end text-dark" tabindex="-1" id="offcanvasNovoAluno" aria-labelledby="offcanvasNovoAlunoLabel" style="width: 480px;">
@@ -477,18 +424,50 @@
                                         <td class="text-end pe-4">
                                             <div class="d-flex gap-2 justify-content-end flex-wrap">
                                                 <button class="btn btn-primary btn-sm px-3" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAluno{{ aluno.id }}" aria-controls="offcanvasAluno{{ aluno.id }}">
-                                                    Editar
+                                                    Mais informações
                                                 </button>
-                                                <a href="{% url 'excluir_aluno' aluno.id %}" class="btn btn-danger btn-sm">Mover para Desistência</a>
+                                                <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modalDesistencia{{ aluno.id }}">
+                                                    Mover para Desistência
+                                                </button>
                                                 <a href="#" class="btn btn-success btn-sm">Mover para Conclusão</a>
                                             </div>
                                         </td>
                                     </tr>
 
+                                    <div class="modal fade" id="modalDesistencia{{ aluno.id }}" tabindex="-1" aria-labelledby="modalDesistenciaLabel{{ aluno.id }}" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content border-0 shadow">
+                                                <div class="modal-header bg-danger text-white">
+                                                    <h5 class="modal-title fw-bold" id="modalDesistenciaLabel{{ aluno.id }}">Confirmar Desistência</h5>
+                                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <form method="POST" action="{% url 'excluir_aluno' aluno.id %}">
+                                                    {% csrf_token %}
+                                                    <div class="modal-body text-start">
+                                                        <p class="text-dark">Você está prestes a mover o(a) aluno(a) <strong class="text-danger">{{ aluno.nome_social|default:aluno.nome }}</strong> para a lista de desistentes.</p>
+                                                        
+                                                        <div class="mb-3 mt-4">
+                                                            <label class="form-label fw-bold small text-uppercase text-secondary">Motivo da Desistência:</label>
+                                                            <select name="motivo_desistencia" class="form-select border-danger" required>
+                                                                <option value="" disabled selected>-- Selecione um motivo --</option>
+                                                                {% for motivo in desistencia %}
+                                                                    <option value="{{ motivo.id }}">{{ motivo.nome }}</option>
+                                                                {% endfor %}
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer bg-light border-0">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                                        <button type="submit" class="btn btn-danger fw-bold px-4">Confirmar</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="offcanvas offcanvas-start text-dark" tabindex="-1" id="offcanvasAluno{{ aluno.id }}" aria-labelledby="offcanvasAlunoLabel{{ aluno.id }}" style="width: 480px;">
                                         <div class="offcanvas-header offcanvas-ratel-header flex-column align-items-start pb-0">
                                             <div class="d-flex w-100 justify-content-between align-items-center mb-2">
-                                                <h5 class="offcanvas-title fw-bold text-ratel-title" id="offcanvasAlunoLabel{{ aluno.id }}">Editar Cadastro</h5>
+                                                <h5 class="offcanvas-title fw-bold text-ratel-title" id="offcanvasAlunoLabel{{ aluno.id }}">Mais informações</h5>
                                                 <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                                             </div>
                                             <ul class="nav nav-tabs border-0 w-100" id="tabsAluno{{ aluno.id }}" role="tablist">
@@ -720,6 +699,25 @@
 
             </div>
         </main>
+    </div>
+</div>
+
+<div class="offcanvas offcanvas-end text-dark" tabindex="-1" id="offcanvasNotificacoes" style="width: 420px;">
+    <div class="offcanvas-header offcanvas-ratel-header">
+        <h5 class="offcanvas-title fw-bold text-ratel-title" id="offcanvasNotificacoesLabel">Notificações</h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body d-flex flex-column align-items-center justify-content-center text-center p-4">
+        <div class="mb-4">
+            <h5 class="fw-bold text-dark mb-1">Não há notificações</h5>
+            <p class="text-muted small">Seu painel corporativo está totalmente atualizado.</p>
+        </div>
+        <div class="p-4 rounded-circle bg-white shadow-sm d-flex align-items-center justify-content-center" style="width: 140px; height: 140px;">
+            <svg class="bell-animation text-primary" width="70" height="70" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M9.17021 20.0003C9.58245 21.1633 10.6934 22.0003 11.9995 22.0003C13.3057 22.0003 14.4166 21.1633 14.8288 20.0003H9.17021Z" fill="#002244"/>
+                <path d="M19.3364 15.0001C18.6669 14.3644 18.0005 12.8344 18.0005 10.0001C18.0005 6.90301 15.6027 4.35412 12.6304 4.04102C12.4335 2.8714 11.4253 2.00012 12.0005 2.00012C12.5757 2.00012 11.5675 2.8714 11.3706 4.04102C8.39828 4.35412 6.00049 6.90301 6.00049 10.0001C6.00049 12.8344 5.33406 14.3644 4.66459 15.0001C4.10301 15.5334 3.79155 16.2755 3.84074 17.042C3.89679 17.9152 4.62312 18.6001 5.50049 18.6001H18.5005C19.3779 18.6001 20.1042 17.9152 20.1602 17.042C20.2094 16.2755 19.898 15.5334 19.3364 15.0001Z" fill="#0066FF"/>
+            </svg>
+        </div>
     </div>
 </div>
 

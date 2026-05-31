@@ -1029,3 +1029,95 @@ fetch('/acompanhamento/api/grafico-unidade/')
     document.getElementById('legendaUnidade').innerHTML = legenda;
 
 });
+// Cores customizadas: Verde para Concluídos, Vermelho para Desistentes 
+
+// =========================================
+// GRÁFICOS DE CONCLUÍDOS VS DESISTENTES
+// =========================================
+
+// Ajustado para fazer fetch na url exata do urls.py
+fetch('/dashboard_second/api/grafico-conclusao_desistencia/')
+.then(response => response.json())
+.then(data => {
+
+    let total = data.valores.reduce((a, b) => a + b, 0);
+
+    // Preenche os cards do topo
+    document.getElementById('totalConcluidos').innerHTML = data.valores[0];
+    document.getElementById('totalDesistentes').innerHTML = data.valores[1];
+
+    // GRÁFICO DE BARRAS
+    new Chart(
+        document.getElementById('graficoStatusBarra'),
+        {
+            type: 'bar',
+            data: {
+                labels: data.labels,
+                datasets: [{
+                    label: 'Quantidade de Alunos',
+                    data: data.valores,
+                    backgroundColor: coresStatus
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false
+            }
+        }
+    );
+
+    // GRÁFICO DE PIZZA
+    new Chart(
+        document.getElementById('graficoStatusPizza'),
+        {
+            type: 'pie',
+            data: {
+                labels: data.labels,
+                datasets: [{
+                    data: data.valores,
+                    backgroundColor: coresStatus
+                }]
+            },
+            plugins: [ChartDataLabels],
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    datalabels: {
+                        color: '#fff',
+                        formatter: (value) => {
+                            if (total === 0) return '0%';
+                            let porcentagem = ((value / total) * 100).toFixed(1);
+                            return porcentagem + '%';
+                        }
+                    }
+                }
+            }
+        }
+    );
+
+    // LEGENDA CUSTOMIZADA
+    let legenda = `<div class="d-flex flex-wrap gap-4">`;
+
+    data.labels.forEach((status, index) => {
+        let porcentagem = total > 0 ? ((data.valores[index] / total) * 100).toFixed(1) : 0;
+        let quantidade = data.valores[index];
+
+        legenda += `
+            <div class="d-flex align-items-center">
+                <div style="width:16px; height:16px; border-radius:50%; background:${coresStatus[index]}; margin-right:8px;"></div>
+                <small class="fw-semibold text-secondary">
+                    ${status} - ${porcentagem}% (${quantidade} alunos)
+                </small>
+            </div>
+        `;
+    });
+
+    legenda += `</div>`;
+    document.getElementById('legendaStatus').innerHTML = legenda;
+
+})
+.catch(error => console.error('Erro ao carregar dados do gráfico:', error));

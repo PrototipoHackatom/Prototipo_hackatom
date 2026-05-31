@@ -29,6 +29,23 @@ Acompanhamento - Ratel Solutions
         border-right: 3px solid var(--ratel-blue);
     }
 
+    /* Classe para fixar o menu na rolagem */
+    .sticky-sidebar {
+        position: sticky;
+        top: 0;
+        height: 100vh; /* Ocupa 100% da altura da tela */
+        overflow-y: auto; /* Permite rolar o próprio menu se for muito grande */
+    }
+
+    /* Estilização sutil da barra de rolagem do menu lateral */
+    .sticky-sidebar::-webkit-scrollbar {
+        width: 5px;
+    }
+    .sticky-sidebar::-webkit-scrollbar-thumb {
+        background-color: rgba(255, 255, 255, 0.2);
+        border-radius: 10px;
+    }
+
     .btn-ratel-nav {
         color: #ffffff !important;
         border: 1px solid rgba(255, 255, 255, 0.1) !important;
@@ -116,38 +133,8 @@ Acompanhamento - Ratel Solutions
 <div class="container-fluid">
     <div class="row">
 
-        <aside class="col-md-2 bg-ratel-sidebar text-white min-vh-100 p-3 d-flex flex-column align-items-center">
-            <div class="w-100 text-center mb-4 p-2 bg-white rounded shadow-sm">
-                <img src="{% static 'img/logo.jpeg' %}" alt="Ratel Solutions Logo" class="img-fluid" style="max-height: 80px; object-fit: contain;">
-            </div>
-            
-            <h6 class="text-uppercase tracking-wider text-muted small fw-bold mb-3 w-100 ps-2" style="letter-spacing: 1px;">Navegação</h6>
-
-            <div class="d-grid gap-2 w-100">
-                <a href="{% url 'dashboard' %}" 
-                   class="btn btn-ratel-nav text-start d-flex justify-content-between align-items-center" 
-                >
-                    Pré‑Aprendizagem / Aprendizagem
-                    <span class="small">▼</span>
-                </a>
-                
-                <div class="collapse show" id="subMenuListas">
-                    <div class="d-grid gap-1 ps-3 pt-1">
-                        <a href="{% url 'pagina_graficos' %}" class="btn btn-ratel-subnav text-start py-2 rounded active">
-                            ↳ Acompanhamento
-                        </a>
-                    </div>
-                </div>
-
-                <a href="{% url 'dashboard_second' %}" class="btn btn-ratel-nav text-start">
-                    Concluídos / Desistentes
-                </a>
-                
-                <button type="button" class="btn btn-ratel-nav text-start border-0 bg-transparent" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNotificacoes" aria-controls="offcanvasNotificacoes">
-                    Notificação
-                </button>
-            </div>
-        </aside>
+        <!-- Adicionado a classe sticky-sidebar e removido o min-vh-100 -->
+        {% include 'menu_lateral.html' %}
 
         <main class="col-md-10 p-4">
 

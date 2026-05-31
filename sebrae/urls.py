@@ -22,5 +22,6 @@ urlpatterns = [
     path('autenticacao/', include('autenticacao.urls')),
     path('dashboard/', include('dashboard.urls')),
     path('acompanhamento/', include('acompanhamento.urls')),
-    path('dashboard_second/', include('dashboard_second.urls'))
+    path('dashboard_second/', include('dashboard_second.urls')),
+    path('acompanhamento_second/', include('acompanhamento_second.urls'))
 ]

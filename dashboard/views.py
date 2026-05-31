@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import Aluno, TurnoEstuda, TurnoVaga,Aprendizagem, Escolaridade
 from .models import Entidade, Curso, TipoFormacao
 from autenticacao.models import Pessoa
+from dashboard_second.models import Desistencia
 from django.core.paginator import Paginator
 
 def dashboard(request):
@@ -170,6 +171,7 @@ def dashboard(request):
     entidade = Entidade.objects.all()
     curso = Curso.objects.all()
     tipo_formacao = TipoFormacao.objects.all()
+    desistencia = Desistencia.objects.all()
 
     return render(
         request,
@@ -185,7 +187,8 @@ def dashboard(request):
             'curso': curso,
             'tipo_formacao': tipo_formacao,
             'eh_admin': eh_admin,
-            'todas_pessoas': todas_pessoas
+            'todas_pessoas': todas_pessoas,
+            'desistencia': desistencia
         }
     )
 

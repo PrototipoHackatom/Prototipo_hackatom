@@ -3,6 +3,12 @@ from autenticacao.models import Pessoa
 from dashboard.models import TurnoEstuda, TurnoVaga, Aprendizagem,Escolaridade
 from dashboard.models import Entidade, Curso, TipoFormacao, Sexo
 
+class Desistencia(models.Model):
+    nome = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.nome
+
 
 class AlunoDesistencia(models.Model):
     nome = models.CharField(max_length=200)
@@ -20,6 +26,7 @@ class AlunoDesistencia(models.Model):
     entidade = models.ForeignKey(Entidade, on_delete=models.DO_NOTHING, null=True)
     curso = models.ForeignKey(Curso, on_delete=models.DO_NOTHING, null=True)
     turno_vaga = models.ForeignKey(TurnoVaga, on_delete=models.DO_NOTHING, null=True)
+    desistencia = models.ForeignKey(Desistencia, on_delete=models.DO_NOTHING, null=True)
     tipo_formacao = models.ForeignKey(TipoFormacao, on_delete=models.DO_NOTHING, null=True)
     #cadastrado_por = models.ForeignKey(Pessoa,on_delete=models.DO_NOTHING,related_name='alunos_cadastrados', null=True)
     cep = models.CharField(max_length=9,null=True)

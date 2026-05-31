@@ -22,6 +22,23 @@
         border-right: 3px solid var(--ratel-blue);
     }
 
+    /* Classe para fixar o menu na rolagem */
+    .sticky-sidebar {
+        position: sticky;
+        top: 0;
+        height: 100vh; /* Ocupa 100% da altura da tela */
+        overflow-y: auto; /* Permite rolar o próprio menu se for muito grande */
+    }
+
+    /* Estilização sutil da barra de rolagem do menu lateral */
+    .sticky-sidebar::-webkit-scrollbar {
+        width: 5px;
+    }
+    .sticky-sidebar::-webkit-scrollbar-thumb {
+        background-color: rgba(255, 255, 255, 0.2);
+        border-radius: 10px;
+    }
+
     .btn-ratel-nav {
         color: #ffffff !important;
         border: 1px solid rgba(255, 255, 255, 0.1) !important;
@@ -99,38 +116,7 @@
 <div class="container-fluid">
     <div class="row">
 
-        <aside class="col-md-2 bg-ratel-sidebar text-white min-vh-100 p-3 d-flex flex-column align-items-center">
-            <div class="w-100 text-center mb-4 p-2 bg-white rounded shadow-sm">
-                <img src="{% static 'img/logo.jpeg' %}" alt="Ratel Solutions Logo" class="img-fluid" style="max-height: 80px; object-fit: contain;">
-            </div>
-            
-            <h6 class="text-uppercase tracking-wider text-muted small fw-bold mb-3 w-100 ps-2" style="letter-spacing: 1px;">Navegação</h6>
-
-            <div class="d-grid gap-2 w-100">
-                <a href="{% url 'dashboard' %}" 
-                   class="btn btn-ratel-nav text-start collapsed d-flex justify-content-between align-items-center" 
-                >
-                    Pré‑Aprendizagem / Aprendizagem
-                    <span class="small">▼</span>
-                </a>
-                
-                <div class="collapse" id="subMenuListas">
-                    <div class="d-grid gap-1 ps-3 pt-1">
-                        <a href="{% url 'pagina_graficos' %}" class="btn btn-ratel-subnav text-start py-2 rounded">
-                            ↳ Acompanhamento
-                        </a>
-                    </div>
-                </div>
-
-                <a href="{% url 'dashboard_second' %}" class="btn btn-ratel-nav text-start active">
-                    Concluídos / Desistentes
-                </a>
-                
-                <button type="button" class="btn btn-ratel-nav text-start border-0 bg-transparent" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNotificacoes" aria-controls="offcanvasNotificacoes">
-                    Notificação
-                </button>
-            </div>
-        </aside>
+{% include 'menu_lateral.html' %}
 
         <main class="col-md-10 p-4">
 
@@ -174,7 +160,6 @@
                 </form>
             </div>
 
-            <!-- Tabela Concluídos -->
             <div class="mt-4 mb-5">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h4 class="text-ratel-title">
@@ -204,7 +189,6 @@
                                         <td>{{ aluno.email }}</td>
                                         <td><span class="badge bg-success">Concluído</span></td>
                                         <td class="text-end pe-4">
-                                            <!-- Botão alterado para Mais informações -->
                                             <button class="btn btn-secondary btn-sm px-3" data-bs-toggle="offcanvas" data-bs-target="#offcanvasConcluido{{ aluno.id }}">Mais informações</button>
                                         </td>
                                     </tr>
@@ -220,7 +204,6 @@
                 </div>
             </div>
 
-            <!-- Tabela Desistentes -->
             <div class="mt-4 mb-5">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h4 class="text-ratel-title">
@@ -250,7 +233,6 @@
                                         <td>{{ aluno.email }}</td>
                                         <td><span class="badge bg-danger">Desistência</span></td>
                                         <td class="text-end pe-4">
-                                            <!-- Botão alterado para Mais informações -->
                                             <button class="btn btn-secondary btn-sm px-3" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDesistente{{ aluno.id }}">Mais informações</button>
                                         </td>
                                     </tr>
@@ -266,7 +248,6 @@
                 </div>
             </div>
 
-            <!-- Modais (Offcanvas) para Edição - Concluídos -->
             {% for aluno in alunos_concluidos %}
             <div class="offcanvas offcanvas-start text-dark" tabindex="-1" id="offcanvasConcluido{{ aluno.id }}" style="width: 480px;">
                 <div class="offcanvas-header offcanvas-ratel-header">
@@ -280,7 +261,6 @@
                         <input type="hidden" name="tipo_aluno" value="concluido">
 
                         <ul class="list-group list-group-flush mb-4">
-                            <!-- Seção Dados Pessoais -->
                             <li class="list-group-item px-0 py-2 list-group-ratel-section ps-2 fw-bold small text-uppercase">Dados Pessoais</li>
                             <li class="list-group-item px-0 py-2 border-0 border-bottom">
                                 <label class="form-label fw-bold text-secondary text-uppercase small mb-1">Nome Completo</label>
@@ -304,7 +284,6 @@
                                 </select>
                             </li>
 
-                            <!-- Seção Contatos e Responsáveis -->
                             <li class="list-group-item px-0 py-2 list-group-ratel-section ps-2 fw-bold small text-uppercase mt-3">Contatos e Responsáveis</li>
                             <li class="list-group-item px-0 py-2 border-0 border-bottom">
                                 <label class="form-label fw-bold text-secondary text-uppercase small mb-1">Email</label>
@@ -323,7 +302,6 @@
                                 <input type="text" name="telefone_responsavel" class="form-control" value="{{ aluno.telefone_responsavel }}" required>
                             </li>
 
-                            <!-- Seção Relações e Vínculos -->
                             <li class="list-group-item px-0 py-2 list-group-ratel-section ps-2 fw-bold small text-uppercase mt-3">Relações e Vínculos</li>
                             <li class="list-group-item px-0 py-2 border-0 border-bottom">
                                 <label class="form-label fw-bold text-secondary text-uppercase small mb-1">Profissional de Referência</label>
@@ -398,7 +376,6 @@
                                 </select>
                             </li>
 
-                            <!-- Seção Localização / Endereço -->
                             <li class="list-group-item px-0 py-2 list-group-ratel-section ps-2 fw-bold small text-uppercase mt-3">Localização / Endereço</li>
                             <li class="list-group-item px-0 py-2 border-0 border-bottom">
                                 <label class="form-label fw-bold text-secondary text-uppercase small mb-1">CEP</label>
@@ -434,7 +411,6 @@
             </div>
             {% endfor %}
 
-            <!-- Modais (Offcanvas) para Edição - Desistentes -->
             {% for aluno in alunos_desistentes %}
             <div class="offcanvas offcanvas-start text-dark" tabindex="-1" id="offcanvasDesistente{{ aluno.id }}" style="width: 480px;">
                 <div class="offcanvas-header offcanvas-ratel-header">
@@ -448,7 +424,6 @@
                         <input type="hidden" name="tipo_aluno" value="desistente">
 
                         <ul class="list-group list-group-flush mb-4">
-                            <!-- Seção Dados Pessoais -->
                             <li class="list-group-item px-0 py-2 list-group-ratel-section ps-2 fw-bold small text-uppercase">Dados Pessoais</li>
                             <li class="list-group-item px-0 py-2 border-0 border-bottom">
                                 <label class="form-label fw-bold text-secondary text-uppercase small mb-1">Nome Completo</label>
@@ -472,7 +447,6 @@
                                 </select>
                             </li>
 
-                            <!-- Seção Contatos e Responsáveis -->
                             <li class="list-group-item px-0 py-2 list-group-ratel-section ps-2 fw-bold small text-uppercase mt-3">Contatos e Responsáveis</li>
                             <li class="list-group-item px-0 py-2 border-0 border-bottom">
                                 <label class="form-label fw-bold text-secondary text-uppercase small mb-1">Email</label>
@@ -491,7 +465,6 @@
                                 <input type="text" name="telefone_responsavel" class="form-control" value="{{ aluno.telefone_responsavel }}" required>
                             </li>
 
-                            <!-- Seção Relações e Vínculos -->
                             <li class="list-group-item px-0 py-2 list-group-ratel-section ps-2 fw-bold small text-uppercase mt-3">Relações e Vínculos</li>
                             <li class="list-group-item px-0 py-2 border-0 border-bottom">
                                 <label class="form-label fw-bold text-secondary text-uppercase small mb-1">Profissional de Referência</label>
@@ -566,7 +539,6 @@
                                 </select>
                             </li>
 
-                            <!-- Seção Localização / Endereço -->
                             <li class="list-group-item px-0 py-2 list-group-ratel-section ps-2 fw-bold small text-uppercase mt-3">Localização / Endereço</li>
                             <li class="list-group-item px-0 py-2 border-0 border-bottom">
                                 <label class="form-label fw-bold text-secondary text-uppercase small mb-1">CEP</label>

@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'dashboard',
     'dashboard_second',
     'acompanhamento',
+    'acompanhamento_second',
 ]
 
 MIDDLEWARE = [
